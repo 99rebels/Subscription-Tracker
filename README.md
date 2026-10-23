@@ -4,6 +4,18 @@ A Chrome extension (Manifest V3) that finds every subscription you pay for, what
 
 **Building this?** Start with [docs/HANDOFF.md](docs/HANDOFF.md), then [docs/BUILD.md](docs/BUILD.md) (build plan and progress). Testing in real Chrome: [docs/TESTING.md](docs/TESTING.md).
 
+## Try it (testers)
+
+You need to be on the tester list first: ask the founder to add the Gmail address you'll scan with.
+
+1. Download this repo (**Code → Download ZIP**, then unzip it) or `git clone` it.
+2. In Chrome, open `chrome://extensions` and turn on **Developer mode** (top right).
+3. Click **Load unpacked** and choose the downloaded folder (the one with `manifest.json` in it).
+4. Pin the extension (puzzle-piece icon → pin), click it, and choose **Scan my Gmail receipts**.
+5. Google will warn that the app isn't verified yet (it's in testing). Click **Continue** to allow read-only access.
+
+The first scan takes about a minute per 100 receipt emails (Gmail's limit for apps); later ones are quick. Everything stays in your browser.
+
 ## Run it
 
 1. Open `chrome://extensions` and turn on **Developer mode**.
@@ -21,7 +33,7 @@ After editing files, click the reload icon on the extension's card. To debug the
 
 ### Gmail
 
-The dev OAuth client ID in `manifest.json` is tied to the unpacked extension loaded from this folder (Testing mode, up to 100 test users; Google asks testers to sign in again weekly). Loading from another folder changes the extension ID and breaks sign-in; see HANDOFF validate #5. Without a client ID, the scan uses a sample inbox and says so.
+The OAuth client ID in `manifest.json` belongs to the extension ID **`poifdgfdbgmjpblgaogeidddepffcpjp`**, which the `key` in `manifest.json` fixes: every copy of this repo, loaded unpacked from any folder, gets that ID, so sign-in works for anyone on the tester list (Testing mode, up to 100 test users; Google asks testers to sign in again weekly). The matching private key (`.pem`) is kept outside the repo and is needed to publish to the Chrome Web Store under the same ID; never commit it. Without a client ID, the scan uses a sample inbox and says so.
 
 ## How it works
 

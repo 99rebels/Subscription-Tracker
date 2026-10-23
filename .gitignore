@@ -3,3 +3,5 @@ node_modules/
 *.zip
 # Exported inboxes (dev/export-inbox.html) and their answer sheets: personal, even after scrubbing
 tests/fixtures/inbox/
+# The extension's private key (signing / Web Store). Never commit it.
+*.pem
