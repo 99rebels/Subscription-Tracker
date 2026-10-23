@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Popup home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 380px; height: 600px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 12px 8px 16px">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <div style="width: 20px; height: 20px; border-radius: 6px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D0E10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Subscription Check</span>
+    </div>
+    <div style="display: flex; gap: 2px">
+      <a href="PanelOverview.dc.html" aria-label="Open full view" style="text-decoration: none; box-sizing: border-box; width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg>
+      </a>
+      <a href="PanelSettings.dc.html" aria-label="Settings" style="text-decoration: none; box-sizing: border-box; width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </a>
+    </div>
+  </header>
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+
+  <section style="padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 4px">
+    <div style="font-size: 12px; color: #A0A6AF">This month</div>
+    <div style="display: flex; align-items: baseline; gap: 4px">
+      <span style="font-size: 40px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1">$85.95</span>
+      <span style="font-size: 15px; color: #A0A6AF">/mo</span>
+    </div>
+    <div style="font-size: 12px; color: #A0A6AF">$1,031 a year · 8 subscriptions · 1 trial</div>
+    <div style="margin-top: 10px; height: 6px; border-radius: 3px; background: #262A30; overflow: hidden">
+      <div style="width: 86%; height: 100%; border-radius: 3px; background: {{accent}}"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A0A6AF; margin-top: 2px">
+      <span>86% of your $100 budget</span>
+      <span style="font-variant-numeric: tabular-nums">$14.05 left</span>
+    </div>
+  </section>
+
+  <section style="padding: 0 12px 12px; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; align-items: center; gap: 6px; padding: 0 4px">
+      <span style="font-size: 12px; font-weight: 600; color: #EDEEF0">Needs attention</span>
+      <span style="font-size: 11px; font-weight: 600; color: #F4B740; background: #2A2213; border-radius: 999px; padding: 0 6px; line-height: 16px">3</span>
+    </div>
+    <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30">
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #2A2213; color: #F4B740; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Canva Pro trial ends in 2 days</div>
+          <div style="font-size: 12px; color: #A0A6AF">Then $14.99/mo from Oct 24</div>
+        </div>
+        <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 12px; font-weight: 600">Cancel</button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30">
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">P</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Paramount+</div>
+          <div style="font-size: 12px; color: #F4B740">No visits in 64 days · $7.99/mo</div>
+        </div>
+        <a href="PanelDetail.dc.html" style="text-decoration: none; box-sizing: border-box; display: flex; align-items: center; justify-content: center; height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Review</a>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px">
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">D</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Still paying for Dropbox?</div>
+          <div style="font-size: 12px; color: #A0A6AF">Last receipt was 11 months ago</div>
+        </div>
+        <div style="display: flex; gap: 4px">
+          <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Yes</button>
+          <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">No</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 0 12px 8px; display: flex; flex-direction: column; gap: 2px">
+    <div style="font-size: 12px; font-weight: 600; padding: 0 4px 4px">Coming up</div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 6px 4px">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">C</div>
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 13px; font-weight: 500">ChatGPT Plus</div>
+        <div style="font-size: 12px; color: #A0A6AF">Nov 2 · in 11 days</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$20.00</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 6px 4px">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">N</div>
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 13px; font-weight: 500">Netflix</div>
+        <div style="font-size: 12px; color: #A0A6AF">Nov 10 · in 19 days</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$17.99</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 6px 4px">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #AEB4F0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">L</div>
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 13px; font-weight: 500">Linear</div>
+        <div style="font-size: 12px; color: #A0A6AF">Nov 14 · in 23 days</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$8.00</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 6px 4px">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">D</div>
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 13px; font-weight: 500">Dropbox Plus</div>
+        <div style="font-size: 12px; color: #A0A6AF">Nov 16 · in 25 days · yearly</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$119.88</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 6px 4px">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">S</div>
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 13px; font-weight: 500">Spotify</div>
+        <div style="font-size: 12px; color: #A0A6AF">Nov 19 · in 28 days</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$11.99</div>
+    </div>
+  </section>
+
+  </div>
+
+  <footer style="padding: 8px 12px 12px; border-top: 1px solid #1C1F23">
+    <a href="PanelOverview.dc.html" style="text-decoration: none; box-sizing: border-box; width: 100%; height: 36px; border-radius: 9px; border: 1px solid #262A30; background: #15171A; color: #EDEEF0; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg>
+      Open full view
+    </a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":380,"height":600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

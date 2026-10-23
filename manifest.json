@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Subscription Check",
+  "version": "0.1.0",
+  "description": "Track your subscriptions, see when you last used them, get reminded before you're charged, and cancel in one click.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "history",
+    "webNavigation",
+    "identity",
+    "sidePanel",
+    "favicon",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "src/panel/panel.html"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "oauth2": {
+    "client_id": "1073476865020-uurvnffpah7ljpo2nluo363vik1mqeqm.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly"
+    ]
+  }
+}

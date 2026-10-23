@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Side panel settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+button,select,input{font-family:inherit}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="width: 360px; height: 1240px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; gap: 4px; padding: 12px 12px 10px; border-bottom: 1px solid #1C1F23">
+    <a href="PanelOverview.dc.html" aria-label="Back" style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <h1 style="margin: 0; font-size: 15px; font-weight: 600">Settings</h1>
+  </header>
+
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; padding: 18px 16px 28px">
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Budget</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #262A30">
+          <label for="budget" style="font-size: 13px">Monthly budget</label>
+          <div style="display: flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30">
+            <span style="font-size: 13px; color: #A0A6AF">$</span>
+            <input id="budget" value="100" inputmode="decimal" style="width: 48px; border: none; outline: none; background: transparent; color: #EDEEF0; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px">
+          <div><div style="font-size: 13px">Suggest what to cut</div><div style="font-size: 12px; color: #A0A6AF">When you go over, based on what you use least</div></div>
+          <button role="switch" aria-checked="true" aria-label="Suggest what to cut" style="width: 36px; height: 20px; border-radius: 999px; border: none; background: {{accent}}; padding: 2px; display: flex; justify-content: flex-end; flex-shrink: 0"><span style="width: 16px; height: 16px; border-radius: 50%; background: #0D0E10"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Reminders</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #262A30">
+          <label for="renewal-reminder" style="font-size: 13px">Before renewals</label>
+          <select id="renewal-reminder" style="height: 30px; padding: 0 8px; border-radius: 7px; border: 1px solid #262A30; background: #1C1F23; color: #EDEEF0; font-size: 13px"><option>1 day</option><option>3 days</option><option>7 days</option></select>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #262A30">
+          <label for="trial-reminder" style="font-size: 13px">Before free trials end</label>
+          <select id="trial-reminder" style="height: 30px; padding: 0 8px; border-radius: 7px; border: 1px solid #262A30; background: #1C1F23; color: #EDEEF0; font-size: 13px"><option>3 days</option><option>1 day</option><option>7 days</option></select>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+          <div><div style="font-size: 13px">Monthly check-in</div><div style="font-size: 12px; color: #A0A6AF">What's coming up and what's worth reviewing</div></div>
+          <button role="switch" aria-checked="true" aria-label="Monthly check-in" style="width: 36px; height: 20px; border-radius: 999px; border: none; background: {{accent}}; padding: 2px; display: flex; justify-content: flex-end; flex-shrink: 0"><span style="width: 16px; height: 16px; border-radius: 50%; background: #0D0E10"></span></button>
+        </div>
+        <a href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; color: #EDEEF0">
+          <div><div style="font-size: 13px">Add all renewals to your calendar</div><div style="font-size: 12px; color: #A0A6AF">Reminders even when Chrome is closed</div></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Finding subscriptions</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; color: #A0A6AF; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          </div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px">Gmail connected</div><div style="font-size: 12px; color: #A0A6AF">Read-only · checked 2 hours ago</div></div>
+          <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Disconnect</button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+          <div><div style="font-size: 13px">Spot new subscriptions at checkout</div><div style="font-size: 12px; color: #A0A6AF">We'll ask before adding anything</div></div>
+          <button role="switch" aria-checked="true" aria-label="Spot new subscriptions at checkout" style="width: 36px; height: 20px; border-radius: 999px; border: none; background: {{accent}}; padding: 2px; display: flex; justify-content: flex-end; flex-shrink: 0"><span style="width: 16px; height: 16px; border-radius: 50%; background: #0D0E10"></span></button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px">
+          <div><div style="font-size: 13px">Track visits for "last used"</div><div style="font-size: 12px; color: #A0A6AF">Only on sites you subscribe to</div></div>
+          <button role="switch" aria-checked="true" aria-label="Track visits for last used" style="width: 36px; height: 20px; border-radius: 999px; border: none; background: {{accent}}; padding: 2px; display: flex; justify-content: flex-end; flex-shrink: 0"><span style="width: 16px; height: 16px; border-radius: 50%; background: #0D0E10"></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Appearance</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid #262A30">
+          <span style="font-size: 13px">Theme</span>
+          <div role="radiogroup" aria-label="Theme" style="display: flex; padding: 2px; border-radius: 8px; background: #1C1F23">
+            <button role="radio" aria-checked="false" style="height: 26px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #A0A6AF; font-size: 12px">System</button>
+            <button role="radio" aria-checked="false" style="height: 26px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #A0A6AF; font-size: 12px">Light</button>
+            <button role="radio" aria-checked="true" style="height: 26px; padding: 0 10px; border-radius: 6px; border: none; background: #3A3F47; color: #EDEEF0; font-size: 12px; font-weight: 600">Dark</button>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 14px">
+          <label for="currency" style="font-size: 13px">Show totals in</label>
+          <select id="currency" style="height: 30px; padding: 0 8px; border-radius: 7px; border: 1px solid #262A30; background: #1C1F23; color: #EDEEF0; font-size: 13px"><option>USD $</option><option>EUR €</option><option>GBP £</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Your data</h2>
+      <div style="display: flex; gap: 10px; font-size: 12px; color: #A0A6AF; line-height: 1.5; padding: 0 2px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        Everything is stored in this browser. We don't have servers, and we never see your email or browsing.
+      </div>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <a href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30; color: #EDEEF0">
+          <div><div style="font-size: 13px">Export a backup</div><div style="font-size: 12px; color: #A0A6AF">CSV for spreadsheets, or a file to restore from</div></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></svg>
+        </a>
+        <a href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; color: #EDEEF0">
+          <div style="font-size: 13px">Restore from a backup</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V8M7 13l5-5 5 5M5 4h14"/></svg>
+        </a>
+      </div>
+      <button style="align-self: flex-start; height: 32px; padding: 0 2px; border: none; background: transparent; color: #FF7A7A; font-size: 13px; font-weight: 500">Delete all data</button>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

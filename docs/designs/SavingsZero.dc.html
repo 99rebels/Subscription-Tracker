@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Savings card before any cancellation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+</style>
+</helmet>
+<div style="width: 360px; height: 200px; box-sizing: border-box; padding: 16px; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif">
+  <a href="PanelOverview.dc.html" style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; background: #15171A; border: 1px solid #262A30; color: #EDEEF0">
+    <div>
+      <div style="font-size: 12px; color: #A0A6AF">You could be saving</div>
+      <div style="display: flex; align-items: baseline; gap: 4px">
+        <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.25">$27.97</span>
+        <span style="font-size: 13px; color: #A0A6AF">/mo</span>
+      </div>
+      <div style="font-size: 12px; color: #A0A6AF; line-height: 1.45">Going to 3 subscriptions you haven't opened in 30+ days. That's $335.64 a year.</div>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #262A30">
+      <span style="font-size: 13px; font-weight: 500; color: {{accent}}">Review them</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

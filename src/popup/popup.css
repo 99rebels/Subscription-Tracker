@@ -1,0 +1,182 @@
+/* Popup: 380 wide, max 600 tall (Chrome allows 800 x 600). Header and footer
+   fixed; the middle scrolls. */
+
+body {
+  width: 380px;
+}
+
+#app {
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 8px 16px;
+  flex-shrink: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.brand-mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.middle {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.middle > * {
+  flex-shrink: 0;
+}
+
+.popup-footer {
+  padding: 8px 12px 12px;
+  border-top: 1px solid var(--raised);
+  flex-shrink: 0;
+}
+
+.total {
+  padding: 4px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.total .budget {
+  margin-top: 10px;
+}
+
+.pblock {
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.block-title {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.icon-tile.s28 {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.cu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  color: var(--text);
+  border-radius: 8px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+}
+.cu:hover {
+  background: var(--surface);
+}
+.cu .amount {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Detected signup */
+.detected {
+  margin: 4px 12px 0;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.detected .kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.detected .price {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.over-budget {
+  margin: 12px 12px 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* First run */
+.skeleton {
+  margin: 12px 16px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton .bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--raised);
+}
+.skeleton .sq {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--raised);
+  flex-shrink: 0;
+}
+.first-run-foot {
+  margin: 16px 12px 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

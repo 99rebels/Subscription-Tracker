@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Side panel overview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 360px; height: 1560px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 12px 10px 16px">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <div style="width: 20px; height: 20px; border-radius: 6px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D0E10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Subscription Check</span>
+    </div>
+    <div style="display: flex; gap: 2px">
+      <button aria-label="Add subscription" style="width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <a href="PanelSettings.dc.html" aria-label="Settings" style="text-decoration: none; box-sizing: border-box; width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <nav aria-label="Sections" style="display: flex; gap: 2px; padding: 0 12px 10px; border-bottom: 1px solid #1C1F23">
+    <a href="#" aria-current="page" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px; background: #1C1F23; color: #EDEEF0">Overview</a>
+    <a href="PanelList.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px">Subscriptions</a>
+    <a href="PanelReview.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px; display: flex; align-items: center; gap: 5px">Review <span style="font-size: 11px; font-weight: 600; color: #F4B740; background: #2A2213; border-radius: 999px; padding: 0 6px; line-height: 16px">2</span></a>
+  </nav>
+
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding: 18px 16px 24px">
+
+    <section style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 12px; color: #A0A6AF">This month</div>
+      <div style="display: flex; align-items: baseline; gap: 4px">
+        <span style="font-size: 40px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1">$85.95</span>
+        <span style="font-size: 15px; color: #A0A6AF">/mo</span>
+      </div>
+      <div style="font-size: 12px; color: #A0A6AF">$1,031 a year · 8 subscriptions · 1 trial</div>
+      <div style="margin-top: 10px; height: 6px; border-radius: 3px; background: #262A30; overflow: hidden">
+        <div style="width: 86%; height: 100%; border-radius: 3px; background: {{accent}}"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A0A6AF; margin-top: 2px">
+        <span>86% of your $100 budget</span>
+        <span style="font-variant-numeric: tabular-nums">$14.05 left</span>
+      </div>
+    </section>
+
+    <a href="PanelSavings.dc.html" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; background: #15171A; border: 1px solid #262A30; color: #EDEEF0">
+      <div style="flex-grow: 1; min-width: 0">
+        <div style="font-size: 12px; color: #A0A6AF">Saved since March</div>
+        <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.25">$125.89</div>
+        <div style="font-size: 12px; color: #A0A6AF">Growing $22.98 every month</div>
+      </div>
+      <svg width="88" height="40" viewBox="0 0 88 40" role="img" aria-label="Savings have grown every month since March" style="flex-shrink: 0">
+        <polyline points="2,38 14,34 26,31 38,24 50,18 62,11 74,5 86,2" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+      </svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 6px">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600">Needs attention</h2>
+        <span style="font-size: 11px; font-weight: 600; color: #F4B740; background: #2A2213; border-radius: 999px; padding: 0 6px; line-height: 16px">2</span>
+      </div>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid #262A30">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #2A2213; color: #F4B740; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div style="flex-grow: 1; min-width: 0">
+            <div style="font-size: 13px; font-weight: 500">Canva Pro trial ends in 2 days</div>
+            <div style="font-size: 12px; color: #A0A6AF">Then $14.99/mo from Oct 24</div>
+          </div>
+          <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 12px; font-weight: 600">Cancel</button>
+        </div>
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">D</div>
+            <div style="flex-grow: 1; min-width: 0">
+              <div style="font-size: 13px; font-weight: 500">Still paying for Dropbox?</div>
+              <div style="font-size: 12px; color: #A0A6AF">Last receipt was 11 months ago</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px; padding-left: 42px">
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Yes, still paying</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">No, cancelled</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600">Worth reviewing</h2>
+        <span style="font-size: 12px; color: #A0A6AF">Not visited in 30+ days</span>
+      </div>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="padding: 14px 12px 12px; border-bottom: 1px solid #262A30">
+          <div style="font-size: 12px; color: #A0A6AF">Cancel all three to save</div>
+          <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px">
+            <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">$335.64</span>
+            <span style="font-size: 12px; color: #A0A6AF">a year · $27.97/mo</span>
+          </div>
+        </div>
+        <a href="PanelDetail.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; color: #EDEEF0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">P</div>
+          <div style="flex-grow: 1; min-width: 0">
+            <div style="font-size: 13px; font-weight: 500">Paramount+</div>
+            <div style="font-size: 12px; color: #F4B740">No visits in 64 days</div>
+          </div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$7.99<span style="font-weight: 400; color: #A0A6AF">/mo</span></span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">A</div>
+          <div style="flex-grow: 1; min-width: 0">
+            <div style="font-size: 13px; font-weight: 500">Adobe Creative Cloud</div>
+            <div style="font-size: 12px; color: #F4B740">Last visit 45 days ago</div>
+          </div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$9.99<span style="font-weight: 400; color: #A0A6AF">/mo</span></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">D</div>
+          <div style="flex-grow: 1; min-width: 0">
+            <div style="font-size: 13px; font-weight: 500">Dropbox Plus</div>
+            <div style="font-size: 12px; color: #F4B740">No visits on this computer</div>
+          </div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$9.99<span style="font-weight: 400; color: #A0A6AF">/mo</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 4px">
+      <h2 style="margin: 0 0 4px; font-size: 12px; font-weight: 600">Coming up</h2>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #A0A6AF; padding: 4px 0">This week</div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0">
+        <div style="width: 44px; flex-shrink: 0; font-size: 12px; color: #A0A6AF">Sat 24</div>
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #C3A6F5; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">C</div>
+        <div style="flex-grow: 1; font-size: 13px; font-weight: 500">Canva Pro <span style="font-size: 11px; font-weight: 600; color: #F4B740; margin-left: 4px">Trial</span></div>
+        <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$14.99</span>
+      </div>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #A0A6AF; padding: 10px 0 4px">Next few weeks</div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0">
+        <div style="width: 44px; flex-shrink: 0; font-size: 12px; color: #A0A6AF">Nov 2</div>
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">C</div>
+        <div style="flex-grow: 1; font-size: 13px; font-weight: 500">ChatGPT Plus</div>
+        <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$20.00</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0">
+        <div style="width: 44px; flex-shrink: 0; font-size: 12px; color: #A0A6AF">Nov 10</div>
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">N</div>
+        <div style="flex-grow: 1; font-size: 13px; font-weight: 500">Netflix</div>
+        <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$17.99</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0">
+        <div style="width: 44px; flex-shrink: 0; font-size: 12px; color: #A0A6AF">Nov 14</div>
+        <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #AEB4F0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">L</div>
+        <div style="flex-grow: 1; font-size: 13px; font-weight: 500">Linear</div>
+        <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$8.00</span>
+      </div>
+      <a href="PanelCalendar.dc.html" style="font-size: 12px; font-weight: 500; padding-top: 6px">See calendar</a>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600">Next 12 months</h2>
+        <span style="font-size: 12px; color: #A0A6AF; font-variant-numeric: tabular-nums">$1,031 expected</span>
+      </div>
+      <div style="position: relative; padding-top: 18px">
+        <div style="position: absolute; top: 0; left: 0; width: calc(200% / 12); display: flex; justify-content: space-around; font-size: 10px; font-weight: 600; color: #EDEEF0; font-variant-numeric: tabular-nums"><span>$186</span><span>$186</span></div>
+        <div role="img" aria-label="Monthly charges for the next 12 months: about $186 in November and December, about $66 in every other month" style="display: flex; align-items: flex-end; gap: 4px; height: 76px">
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 100%; border-radius: 3px; background: {{accent}}"></div>
+            <span style="font-size: 10px; color: #8A9099">N</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 100%; border-radius: 3px; background: #4A505A"></div>
+            <span style="font-size: 10px; color: #8A9099">D</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">J</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">F</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">M</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">A</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">M</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">J</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">J</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">A</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">S</span>
+          </div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end">
+            <div style="width: 100%; height: 35%; border-radius: 3px; background: #3A3F47"></div>
+            <span style="font-size: 10px; color: #8A9099">O</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #A0A6AF; line-height: 1.45">November and December are heavier: <span style="color: #EDEEF0">Dropbox</span> and <span style="color: #EDEEF0">Adobe</span> renew yearly ($119.88 each).</div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600">Where it goes</h2>
+      <div style="display: flex; align-items: center; gap: 20px">
+        <div style="position: relative; width: 112px; height: 112px; flex-shrink: 0">
+          <svg width="112" height="112" viewBox="0 0 120 120" role="img" aria-label="Work tools $47.98 (56%), Entertainment $37.97 (44%)">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="{{accent}}" stroke-width="7" stroke-dasharray="171.4 314.16" transform="rotate(-90 60 60)"></circle>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#4A505A" stroke-width="7" stroke-dasharray="134.8 314.16" stroke-dashoffset="-175.4" transform="rotate(-90 60 60)"></circle>
+          </svg>
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center">
+            <span style="font-size: 16px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">$85.95</span>
+            <span style="font-size: 11px; color: #A0A6AF">a month</span>
+          </div>
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: {{accent}}"></span>
+              <span style="flex-grow: 1">Work tools</span>
+              <span style="font-weight: 600; font-variant-numeric: tabular-nums">$47.98</span>
+            </div>
+            <div style="font-size: 12px; color: #A0A6AF; padding-left: 16px">4 subscriptions · 56%</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #4A505A"></span>
+              <span style="flex-grow: 1">Entertainment</span>
+              <span style="font-weight: 600; font-variant-numeric: tabular-nums">$37.97</span>
+            </div>
+            <div style="font-size: 12px; color: #A0A6AF; padding-left: 16px">3 subscriptions · 44%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

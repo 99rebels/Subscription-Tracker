@@ -1,0 +1,175 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-22T16:30:00Z"
+  },
+  "title": "Subscription Check UI",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 380,
+      "h": 600,
+      "title": "Popup \u00b7 Home",
+      "radius": 12,
+      "is_interactive": true
+    },
+    "PopupDetected.dc.html": {
+      "x": 460,
+      "y": 0,
+      "w": 380,
+      "h": 600,
+      "title": "Popup \u00b7 Detected signup",
+      "radius": 12,
+      "is_interactive": true
+    },
+    "PopupEmpty.dc.html": {
+      "x": 920,
+      "y": 0,
+      "w": 380,
+      "h": 600,
+      "title": "Popup \u00b7 First run",
+      "radius": 12,
+      "is_interactive": true
+    },
+    "Components.dc.html": {
+      "x": 0,
+      "y": 1020,
+      "w": 1300,
+      "h": 1480,
+      "title": "Components"
+    },
+    "PanelOverview.dc.html": {
+      "x": 0,
+      "y": 2920,
+      "w": 360,
+      "h": 1560,
+      "title": "Side panel \u00b7 Overview",
+      "is_interactive": true
+    },
+    "PanelList.dc.html": {
+      "x": 440,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Subscriptions",
+      "is_interactive": true
+    },
+    "PanelDetail.dc.html": {
+      "x": 1320,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Detail",
+      "is_interactive": true
+    },
+    "PanelReview.dc.html": {
+      "x": 1760,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Review",
+      "is_interactive": true
+    },
+    "PanelCalendar.dc.html": {
+      "x": 880,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Subscriptions (calendar view)",
+      "is_interactive": true
+    },
+    "PanelSettings.dc.html": {
+      "x": 2200,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Settings",
+      "is_interactive": true
+    },
+    "PanelSavings.dc.html": {
+      "x": 2640,
+      "y": 2920,
+      "w": 360,
+      "h": 1240,
+      "title": "Side panel \u00b7 Savings",
+      "is_interactive": true
+    },
+    "SavingsZero.dc.html": {
+      "x": 0,
+      "y": 4600,
+      "w": 360,
+      "h": 200,
+      "title": "Overview \u00b7 savings card before any cancellation",
+      "is_interactive": true
+    },
+    "PanelScanResults.dc.html": {
+      "x": 3080,
+      "y": 2920,
+      "w": 360,
+      "h": 1500,
+      "title": "Side panel \u00b7 Gmail scan results",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "PopupDetected.dc.html",
+    "PopupEmpty.dc.html",
+    "Components.dc.html",
+    "PanelOverview.dc.html",
+    "PanelList.dc.html",
+    "PanelCalendar.dc.html",
+    "PanelDetail.dc.html",
+    "PanelReview.dc.html",
+    "PanelSettings.dc.html",
+    "PanelSavings.dc.html",
+    "SavingsZero.dc.html",
+    "PanelScanResults.dc.html"
+  ],
+  "notes": {
+    "popupTitle": {
+      "x": 0,
+      "y": -300,
+      "text": "Popup",
+      "kind": "title1",
+      "maxW": 1300
+    },
+    "componentsTitle": {
+      "x": 0,
+      "y": 720,
+      "text": "Components",
+      "kind": "title1",
+      "maxW": 1300
+    },
+    "popupSize": {
+      "x": 1380,
+      "y": 0,
+      "w": 300,
+      "text": "Popup size: 380 wide \u00d7 600 tall max (Chrome caps popups at 800 \u00d7 600). Header and footer stay fixed; the middle scrolls when there's more to show.",
+      "fill": "gray",
+      "size": "s"
+    },
+    "panelTitle": {
+      "x": 0,
+      "y": 2620,
+      "text": "Side panel",
+      "kind": "title1",
+      "maxW": 3440
+    },
+    "panelSize": {
+      "x": 3520,
+      "y": 2920,
+      "w": 300,
+      "text": "Side panel: designed at 360 wide. People can drag it wider and the layout stretches. It's full browser height (shown taller here so you can see everything); the content scrolls under the fixed header and tabs.",
+      "fill": "gray",
+      "size": "s"
+    }
+  },
+  "designSystems": []
+}

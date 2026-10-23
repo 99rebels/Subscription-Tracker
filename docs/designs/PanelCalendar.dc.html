@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Subscriptions calendar view</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 360px; height: 1240px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 12px 10px 16px">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <div style="width: 20px; height: 20px; border-radius: 6px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D0E10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Subscription Check</span>
+    </div>
+    <div style="display: flex; gap: 2px">
+      <button aria-label="Add subscription" style="width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <a href="PanelSettings.dc.html" aria-label="Settings" style="width: 32px; height: 32px; border-radius: 8px; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <nav aria-label="Sections" style="display: flex; gap: 2px; padding: 0 12px 10px; border-bottom: 1px solid #1C1F23">
+    <a href="PanelOverview.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px">Overview</a>
+    <a href="PanelList.dc.html" aria-current="page" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px; background: #1C1F23; color: #EDEEF0">Subscriptions</a>
+    <a href="PanelReview.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px; display: flex; align-items: center; gap: 5px">Review <span style="font-size: 11px; font-weight: 600; color: #F4B740; background: #2A2213; border-radius: 999px; padding: 0 6px; line-height: 16px">2</span></a>
+  </nav>
+
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; padding: 16px 16px 24px">
+
+    <div role="group" aria-label="View" style="display: flex; align-self: flex-start; padding: 2px; border-radius: 8px; background: #1C1F23">
+      <a href="PanelList.dc.html" style="height: 26px; padding: 0 12px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; gap: 6px; color: #A0A6AF"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>List</a>
+      <a href="PanelCalendar.dc.html" aria-current="page" style="height: 26px; padding: 0 12px; border-radius: 6px; font-size: 12px; display: flex; align-items: center; gap: 6px; background: #3A3F47; color: #EDEEF0; font-weight: 600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</a>
+    </div>
+
+    <section style="display: flex; align-items: center; justify-content: space-between">
+      <div>
+        <h1 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em">November 2026</h1>
+        <div style="font-size: 12px; color: #A0A6AF; font-variant-numeric: tabular-nums">$185.85 due · 6 charges</div>
+      </div>
+      <div style="display: flex; gap: 4px">
+        <button aria-label="Previous month" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #262A30; background: transparent; color: #EDEEF0; display: flex; align-items: center; justify-content: center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button aria-label="Next month" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #262A30; background: transparent; color: #EDEEF0; display: flex; align-items: center; justify-content: center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 4px">
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; font-size: 11px; font-weight: 600; color: #8A9099; text-align: center; padding-bottom: 2px">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <sc-for list="{{weeks}}" as="week" hint-placeholder-count="6">
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+          <sc-for list="{{week.days}}" as="d" hint-placeholder-count="7">
+            <div style="height: 48px; border-radius: 8px; box-sizing: border-box; padding-top: 5px; display: flex; flex-direction: column; align-items: center; gap: 4px; background: {{d.bg}}; border: 1px solid {{d.border}}">
+              <span style="font-size: 12px; line-height: 1; color: {{d.numColor}}; font-weight: {{d.weight}}; font-variant-numeric: tabular-nums">{{d.label}}</span>
+              <sc-if value="{{d.hasCharge}}" hint-placeholder-val="{{false}}">
+                <div style="width: 20px; height: 20px; border-radius: 5px; background: #1C1F23; border: 1px {{d.tileBorder}} #3A3F47; box-sizing: border-box; color: {{d.tint}}; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center">{{d.letter}}</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </section>
+
+    <section style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 12px; font-weight: 600; color: #A0A6AF">Mon, Nov 16</div>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">D</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Dropbox Plus</div>
+          <div style="font-size: 12px; color: #A0A6AF">Yearly · <span style="color: #F4B740; font-weight: 500">no visits on this computer</span></div>
+        </div>
+        <span style="font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums">$119.88</span>
+      </div>
+      <div style="display: flex; gap: 8px">
+        <button style="flex-grow: 1; height: 32px; border-radius: 8px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 12px; font-weight: 600">Cancel before Nov 16</button>
+        <button style="flex-grow: 1; height: 32px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Keep it</button>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column">
+      <h2 style="margin: 0 0 6px; font-size: 12px; font-weight: 600">All charges this month</h2>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 2</span>ChatGPT Plus</span><span style="font-variant-numeric: tabular-nums">$20.00</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 10</span>Netflix</span><span style="font-variant-numeric: tabular-nums">$17.99</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 14</span>Linear</span><span style="font-variant-numeric: tabular-nums">$8.00</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 16</span>Dropbox Plus</span><span style="font-variant-numeric: tabular-nums">$119.88</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 19</span>Spotify</span><span style="font-variant-numeric: tabular-nums">$11.99</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; border-bottom: 1px solid #1C1F23"><span><span style="display: inline-block; width: 52px; color: #A0A6AF">Nov 21</span>Paramount+</span><span style="font-variant-numeric: tabular-nums">$7.99</span></div>
+      <div style="display: flex; justify-content: space-between; padding: 8px 2px; font-size: 13px; color: #A0A6AF"><span><span style="display: inline-block; width: 52px">Nov 24</span>Canva Pro, if you keep it</span><span style="font-variant-numeric: tabular-nums">$14.99</span></div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const accent = this.props.accent ?? '#8AB4FF';
+    // November 2026 starts on a Sunday; weeks start on Monday.
+    const charges = {
+      2: { letter: 'C', tint: '#86D4BF' },
+      10: { letter: 'N', tint: '#F0959A' },
+      14: { letter: 'L', tint: '#AEB4F0' },
+      16: { letter: 'D', tint: '#93B5FF' },
+      19: { letter: 'S', tint: '#86D4BF' },
+      21: { letter: 'P', tint: '#93B5FF' },
+      24: { letter: 'C', tint: '#C3A6F5', trial: true },
+    };
+    const selected = 16;
+    const cells = [];
+    for (let d = 26; d <= 31; d++) cells.push({ day: d, outside: true });
+    for (let d = 1; d <= 30; d++) cells.push({ day: d, outside: false });
+    while (cells.length % 7) cells.push({ day: cells.length - 35, outside: true });
+    const days = cells.map((c) => {
+      const charge = !c.outside && charges[c.day];
+      const isSelected = !c.outside && c.day === selected;
+      return {
+        label: String(c.day),
+        bg: isSelected ? '#1C1F23' : charge ? '#15171A' : 'transparent',
+        border: isSelected ? accent : charge ? '#262A30' : 'transparent',
+        numColor: c.outside ? '#3A3F47' : charge ? '#EDEEF0' : '#8A9099',
+        weight: charge ? 600 : 400,
+        hasCharge: !!charge,
+        letter: charge ? charge.letter : '',
+        tint: charge ? charge.tint : '',
+        tileBorder: charge && charge.trial ? 'dashed' : 'solid',
+      };
+    });
+    const weeks = [];
+    for (let i = 0; i < days.length; i += 7) weeks.push({ days: days.slice(i, i + 7) });
+    return { accent, weeks };
+  }
+}
+</script>
+</body>
+</html>

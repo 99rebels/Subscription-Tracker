@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Side panel review</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 360px; height: 1240px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 12px 10px 16px">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <div style="width: 20px; height: 20px; border-radius: 6px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D0E10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+      </div>
+      <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Subscription Check</span>
+    </div>
+    <div style="display: flex; gap: 2px">
+      <button aria-label="Add subscription" style="width: 32px; height: 32px; border: none; border-radius: 8px; background: transparent; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <a href="PanelSettings.dc.html" aria-label="Settings" style="width: 32px; height: 32px; border-radius: 8px; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <nav aria-label="Sections" style="display: flex; gap: 2px; padding: 0 12px 10px; border-bottom: 1px solid #1C1F23">
+    <a href="PanelOverview.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px">Overview</a>
+    <a href="PanelList.dc.html" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px">Subscriptions</a>
+    <a href="#" aria-current="page" style="font-size: 13px; font-weight: 500; padding: 6px 10px; border-radius: 8px; background: #1C1F23; color: #EDEEF0; display: flex; align-items: center; gap: 5px">Review <span style="font-size: 11px; font-weight: 600; color: #F4B740; background: #2A2213; border-radius: 999px; padding: 0 6px; line-height: 16px">2</span></a>
+  </nav>
+
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; padding: 18px 16px 24px">
+
+    <section style="display: flex; flex-direction: column; gap: 4px">
+      <h1 style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em">2 things to check</h1>
+      <p style="margin: 0; font-size: 13px; color: #A0A6AF; line-height: 1.5">Quick answers keep your totals right. Nothing changes until you say so.</p>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600">Please confirm</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">D</div>
+          <div style="flex-grow: 1"><div style="font-size: 14px; font-weight: 600">Still paying for Dropbox?</div><div style="font-size: 12px; color: #A0A6AF">Plus · $119.88/yr</div></div>
+        </div>
+        <div style="display: flex; gap: 8px; font-size: 12px; background: #1C1F23; border-radius: 8px; padding: 8px 10px; line-height: 1.45">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          Last receipt was 11 months ago. If it's yearly, it renews Nov 16.
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: none; background: {{accent}}; color: #0D0E10; font-size: 12px; font-weight: 600">Yes, still paying</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">No, cancelled</button>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600">Spotted while browsing</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #CFADFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">F</div>
+          <div style="flex-grow: 1"><div style="font-size: 14px; font-weight: 600">Figma Professional</div><div style="font-size: 12px; color: #A0A6AF">figma.com · today, 2:14 pm</div></div>
+          <div style="text-align: right"><div style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums">$16.00</div><div style="font-size: 12px; color: #A0A6AF">/mo</div></div>
+        </div>
+        <div style="display: flex; gap: 8px; font-size: 12px; background: #1C1F23; border-radius: 8px; padding: 8px 10px; line-height: 1.45">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          Price read from the checkout page. No receipt yet.
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 600">Track it</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Not a subscription</button>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Already sorted</h2>
+        <span style="font-size: 12px; color: #8A9099">From your last scan</span>
+      </div>
+      <div style="border: 1px solid #1C1F23; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C1F23">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; color: #EDEEF0">Hulu, cancelled</div><div style="font-size: 12px; color: #8A9099">Cancellation confirmed by email, Apr 3</div></div>
+          <a href="#" style="font-size: 12px">Undo</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C1F23">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; color: #EDEEF0">Duolingo Super, cancelled</div><div style="font-size: 12px; color: #8A9099">You confirmed. Receipts stopped in May.</div></div>
+          <a href="#" style="font-size: 12px">Undo</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; color: #EDEEF0">Uber, not a subscription</div><div style="font-size: 12px; color: #8A9099">Irregular one-off receipts</div></div>
+          <a href="#" style="font-size: 12px">Undo</a>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid #262A30">
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; color: #A0A6AF; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      </div>
+      <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Gmail checked 2 hours ago</div><div style="font-size: 12px; color: #A0A6AF">New receipts are picked up automatically</div></div>
+      <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500; white-space: nowrap">Check now</button>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

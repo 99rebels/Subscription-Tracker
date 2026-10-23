@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Export receipt-like emails as test data for the parser scorecard (npm run scorecard).
+     Open inside the extension: chrome-extension://<extension id>/dev/export-inbox.html
+     (the id is on chrome://extensions). Runs the extension's own Gmail fetch and
+     HTML-to-text, removes personal details (src/lib/scrub.js) and saves a JSON file
+     to Downloads. Move it to tests/fixtures/inbox/ (git-ignored). Read it before
+     sharing it with anyone. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Export test inbox</title>
+    <link rel="stylesheet" href="../src/ui/tokens.css" />
+    <link rel="stylesheet" href="../src/ui/components.css" />
+    <style>
+      body { background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, sans-serif; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+      h1 { font-size: 20px; margin: 0 0 8px; }
+      p, li { color: var(--muted); }
+      label { display: block; font-weight: 600; margin: 20px 0 6px; }
+      textarea { width: 100%; box-sizing: border-box; min-height: 120px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font: inherit; }
+      button { margin-top: 16px; }
+      #status { margin-top: 16px; }
+      pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; white-space: pre-wrap; font-size: 12px; max-height: 360px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>Export test inbox</h1>
+    <p>Saves about 15 months of receipt-like emails as a file for testing the receipt parser. It reads them the same way the scan does, then removes your email address, card digits, phone numbers, long reference numbers, link tracking and anything you list below. The file goes to your Downloads folder and nowhere else.</p>
+    <label for="words">Also remove (one per line): your name and its parts, street, town, postcode, usernames</label>
+    <textarea id="words" placeholder="Jane Doe&#10;Jane&#10;12 Elm Road&#10;D04 X123&#10;janed05"></textarea>
+    <button class="btn primary" id="go">Export emails</button>
+    <div id="status"></div>
+    <script type="module" src="export-inbox.js"></script>
+  </body>
+</html>

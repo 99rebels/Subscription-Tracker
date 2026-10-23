@@ -1,0 +1,10 @@
+{
+  "name": "subscription-check",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 node --test \"tests/*.test.mjs\"",
+    "check-links": "node scripts/check-cancel-links.mjs",
+    "scorecard": "node scripts/scorecard.mjs"
+  }
+}

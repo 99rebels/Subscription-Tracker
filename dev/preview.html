@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Preview the side panel in a normal tab with the designs' sample account:
+     python3 -m http.server 8765  (from the repo root), then open
+     http://localhost:8765/dev/preview.html  (add ?empty for a new user, ?light for light mode,
+     ?budget=80 to set a budget, ?mixed for a GBP subscription, ?click=Label to click a button by its text after loading; repeatable).
+     Uses a fake chrome.* (dev/chrome-shim.js); not part of the extension. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Side panel preview</title>
+    <link rel="stylesheet" href="../src/ui/tokens.css" />
+    <link rel="stylesheet" href="../src/ui/components.css" />
+    <link rel="stylesheet" href="../src/panel/panel.css" />
+    <style>
+      html { background: #000; }
+      body { max-width: var(--preview-width, 360px); margin: 0; }
+    </style>
+    <script src="chrome-shim.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { sampleData } from "./sample-data.js";
+      const params = new URLSearchParams(location.search);
+      if (params.has("width")) document.body.style.setProperty("--preview-width", `${params.get("width")}px`);
+      const data = params.has("empty") ? { settings: {} } : sampleData();
+      if (params.has("light")) data.settings = { ...data.settings, theme: "light" };
+      if (params.has("mixed")) {
+        const spotify = data.subscriptions.find((s) => s.name === "Spotify");
+        Object.assign(spotify, { currency: "GBP", price: 9.99 });
+        data.fx = { base: "EUR", date: "2026-10-22", rates: { USD: 1.1205, GBP: 0.8377 }, fetchedAt: Date.now() };
+      }
+      if (params.has("budget")) data.settings = { ...data.settings, budget: Number(params.get("budget")) };
+      await chrome.storage.local.set(data);
+      await import("../src/panel/panel.js");
+
+      // ?click=Label&click=Other clicks buttons/links by their text, in order,
+      // 600ms apart: a poor man's end-to-end test with headless Chrome.
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      for (const label of params.getAll("click")) {
+        await wait(600);
+        const el = [...document.querySelectorAll("button, a")].find((e) => e.textContent.trim() === label);
+        if (el) el.click();
+        else console.warn("preview: nothing to click for", label);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gmail scan results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF;text-decoration:none}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 360px; height: 1500px; box-sizing: border-box; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <header style="display: flex; align-items: center; gap: 8px; padding: 14px 16px 12px; border-bottom: 1px solid #1C1F23">
+    <div style="width: 20px; height: 20px; border-radius: 6px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0D0E10" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+    </div>
+    <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Subscription Check</span>
+  </header>
+
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; padding: 20px 16px 24px">
+
+    <section style="display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #A0A6AF">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+        Scanned 412 receipts from the last 15 months
+      </div>
+      <h1 style="margin: 0; font-size: 12px; font-weight: 500; color: #A0A6AF; margin-top: 8px">You're paying</h1>
+      <div style="display: flex; align-items: baseline; gap: 4px">
+        <span style="font-size: 44px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.05">$85.95</span>
+        <span style="font-size: 16px; color: #A0A6AF">/mo</span>
+      </div>
+      <div style="font-size: 13px; color: #A0A6AF">$1,031 a year across 8 subscriptions, 1 to confirm</div>
+    </section>
+
+    <section style="padding: 12px 14px; border-radius: 12px; background: #2A2213; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 13px; font-weight: 600; color: #F4B740">$27.97/mo on things you don't open</div>
+      <div style="font-size: 12px; color: #A0A6AF; line-height: 1.45">Paramount+, Adobe and Dropbox haven't been opened on this computer in 30+ days.</div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600">You're paying for · 7</h2>
+        <span style="font-size: 12px; color: #A0A6AF">Untick anything that's wrong</span>
+      </div>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">C</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">ChatGPT Plus</div><div style="font-size: 12px; color: #A0A6AF">5 receipts · renews Nov 2</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$20.00</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">N</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Netflix</div><div style="font-size: 12px; color: #A0A6AF">15 receipts · renews Nov 10</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$17.99</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #C3A6F5; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">C</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Canva Pro <span style="font-size: 11px; font-weight: 600; color: #F4B740; margin-left: 2px">Trial</span></div><div style="font-size: 12px; color: #A0A6AF">Trial ends Oct 24, then $14.99/mo</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: #A0A6AF">$0.00</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">S</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Spotify</div><div style="font-size: 12px; color: #A0A6AF">15 receipts · renews Nov 19</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$11.99</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #AEB4F0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">L</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Linear</div><div style="font-size: 12px; color: #A0A6AF">Billed via Stripe · renews Nov 14</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$8.00</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #262A30; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">P</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Paramount+</div><div style="font-size: 12px; color: #F4B740">No visits in 64 days</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$7.99</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer">
+          <input type="checkbox" checked style="width: 16px; height: 16px; margin: 0; accent-color: {{accent}}; flex-shrink: 0">
+          <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">A</div>
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Adobe Creative Cloud</div><div style="font-size: 12px; color: #F4B740">Yearly · last visit 45 days ago</div></div>
+          <span style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$119.88<span style="font-weight: 400; color: #A0A6AF">/yr</span></span>
+        </label>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600">Please confirm · 2</h2>
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #262A30">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">D</div>
+            <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Dropbox Plus · $119.88/yr</div><div style="font-size: 12px; color: #A0A6AF">Last receipt was 11 months ago</div></div>
+          </div>
+          <div style="display: flex; gap: 6px; padding-left: 38px">
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Still paying</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Cancelled</button>
+          </div>
+        </div>
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F4C77B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0">A</div>
+            <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; font-weight: 500">Amazon</div><div style="font-size: 12px; color: #A0A6AF">Found 9 order receipts. Do you have Prime?</div></div>
+          </div>
+          <div style="display: flex; gap: 6px; padding-left: 38px">
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Yes, add Prime</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">No</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #A0A6AF">Not added · 2</h2>
+      <div style="border: 1px solid #1C1F23; border-radius: 12px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C1F23">
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; color: #A0A6AF">Peacock</div><div style="font-size: 12px; color: #8A9099">Cancellation email on Feb 12</div></div>
+          <a href="#" style="font-size: 12px">Add anyway</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px">
+          <div style="flex-grow: 1; min-width: 0"><div style="font-size: 13px; color: #A0A6AF">Uber</div><div style="font-size: 12px; color: #8A9099">One-off receipts, not a subscription</div></div>
+          <a href="#" style="font-size: 12px">Add anyway</a>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; gap: 8px; font-size: 12px; color: #A0A6AF; line-height: 1.5">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      Read in your browser. None of your email left this computer.
+    </div>
+  </div>
+
+  <footer style="padding: 12px 16px 16px; border-top: 1px solid #1C1F23; display: flex; flex-direction: column; gap: 6px">
+    <a href="PanelOverview.dc.html" style="height: 42px; border-radius: 10px; background: {{accent}}; color: #0D0E10; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center">Add 7 subscriptions</a>
+    <div style="font-size: 12px; color: #A0A6AF; text-align: center">You can answer the 2 questions later in Review</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":360,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>

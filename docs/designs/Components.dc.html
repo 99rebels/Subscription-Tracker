@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Components</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0D0E10}
+a{color:#A0A6AF}a:hover{color:#EDEEF0}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1300px; min-height: 1480px; box-sizing: border-box; padding: 56px; background: #0D0E10; color: #EDEEF0; font-family: Inter, system-ui, sans-serif; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px; align-content: start">
+
+  <!-- Colours -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Colour</h2>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #0D0E10; border: 1px solid #262A30"></div><div style="font-size: 12px; font-weight: 600">Background</div><div style="font-size: 12px; color: #A0A6AF">#0D0E10</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #15171A; border: 1px solid #262A30"></div><div style="font-size: 12px; font-weight: 600">Surface</div><div style="font-size: 12px; color: #A0A6AF">#15171A</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #1C1F23; border: 1px solid #262A30"></div><div style="font-size: 12px; font-weight: 600">Raised</div><div style="font-size: 12px; color: #A0A6AF">#1C1F23</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #262A30"></div><div style="font-size: 12px; font-weight: 600">Border</div><div style="font-size: 12px; color: #A0A6AF">#262A30</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #EDEEF0"></div><div style="font-size: 12px; font-weight: 600">Text</div><div style="font-size: 12px; color: #A0A6AF">#EDEEF0</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #A0A6AF"></div><div style="font-size: 12px; font-weight: 600">Muted text</div><div style="font-size: 12px; color: #A0A6AF">#A0A6AF</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: {{accent}}"></div><div style="font-size: 12px; font-weight: 600">Accent</div><div style="font-size: 12px; color: #A0A6AF">{{accent}}</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #F4B740"></div><div style="font-size: 12px; font-weight: 600">Attention</div><div style="font-size: 12px; color: #A0A6AF">#F4B740</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #2A2213"></div><div style="font-size: 12px; font-weight: 600">Attention bg</div><div style="font-size: 12px; color: #A0A6AF">#2A2213</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #FF7A7A"></div><div style="font-size: 12px; font-weight: 600">Cancel</div><div style="font-size: 12px; color: #A0A6AF">#FF7A7A</div></div>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #A0A6AF; line-height: 1.5">One accent. Amber means "look at this" (not visited lately, trial ending, over budget). Red only for cancelling. Service logos supply the rest of the colour.</p>
+  </section>
+
+  <!-- Type -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Type · Inter</h2>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 40px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1">$85.95</span>
+      <span style="font-size: 12px; color: #A0A6AF">Figure · 40 / 700 · tabular</span>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Find everything you're paying for</span>
+      <span style="font-size: 12px; color: #A0A6AF">Heading · 22 / 700</span>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 16px; font-weight: 600">Figma Professional</span>
+      <span style="font-size: 12px; color: #A0A6AF">Title · 16 / 600</span>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 13px; font-weight: 500">Netflix</span>
+      <span style="font-size: 12px; color: #A0A6AF">Body · 13 / 500</span>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 12px; color: #A0A6AF">Nov 10 · in 19 days</span>
+      <span style="font-size: 12px; color: #A0A6AF">Caption · 12 / 400 · muted</span>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px">
+      <span style="font-size: 12px; font-weight: 600">Needs attention</span>
+      <span style="font-size: 12px; color: #A0A6AF">Label · 12 / 600</span>
+    </div>
+  </section>
+
+  <!-- Subscription rows -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Subscription row</h2>
+    <div style="background: #15171A; border: 1px solid #262A30; border-radius: 12px; overflow: hidden">
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">N</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Netflix</div>
+          <div style="font-size: 12px; color: #A0A6AF">Renews Nov 10 · visited 2 days ago</div>
+        </div>
+        <div style="text-align: right"><div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$17.99</div><div style="font-size: 12px; color: #A0A6AF">/mo</div></div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">P</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Paramount+</div>
+          <div style="font-size: 12px; color: #A0A6AF">Renews Nov 21 · <span style="color: #F4B740; font-weight: 500">no visits in 64 days</span></div>
+        </div>
+        <div style="text-align: right"><div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$7.99</div><div style="font-size: 12px; color: #A0A6AF">/mo</div></div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #C3A6F5; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">C</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px">Canva Pro <span style="font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: #2A2213; color: #F4B740">Trial</span></div>
+          <div style="font-size: 12px; color: #A0A6AF">Trial ends Oct 24 · then $14.99/mo</div>
+        </div>
+        <span style="font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; background: #2A2213; color: #F4B740">In 2 days</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">A</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px">Adobe Creative Cloud <span style="font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #A0A6AF">Yearly</span></div>
+          <div style="font-size: 12px; color: #A0A6AF">Renews Dec 26 · <span style="color: #F4B740; font-weight: 500">last visit 45 days ago</span></div>
+        </div>
+        <div style="text-align: right"><div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$119.88</div><div style="font-size: 12px; color: #A0A6AF">$9.99/mo</div></div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #262A30">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">D</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Dropbox Plus</div>
+          <div style="font-size: 12px; color: #A0A6AF">Renews Nov 16 · <span style="color: #F4B740; font-weight: 500">no visits on this computer</span></div>
+        </div>
+        <div style="text-align: right"><div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums">$119.88</div><div style="font-size: 12px; color: #A0A6AF">$9.99/mo</div></div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #CFADFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">F</div>
+        <div style="flex-grow: 1; min-width: 0">
+          <div style="font-size: 13px; font-weight: 500">Figma Professional</div>
+          <div style="font-size: 12px; color: #A0A6AF">Price from checkout page · confirming with receipt</div>
+        </div>
+        <div style="text-align: right"><div style="font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: #A0A6AF; border-bottom: 1px dashed #6E747D">$16.00</div><div style="font-size: 12px; color: #A0A6AF">/mo</div></div>
+      </div>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #A0A6AF; line-height: 1.5">States: normal · not visited lately · trial (countdown chip replaces price) · yearly (shows the monthly share) · no visits on this computer · price pending (dashed until a receipt confirms it).</p>
+  </section>
+
+  <!-- Tags and chips -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Tags and chips</h2>
+    <div style="font-size: 12px; font-weight: 600">Status tags</div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #2A2213; color: #F4B740">Trial</span>
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #A0A6AF">Yearly</span>
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}">Please confirm</span>
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1C1F23; color: #A0A6AF; text-decoration: line-through">Cancelled</span>
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px dashed #6E747D; color: #A0A6AF">Price pending</span>
+      <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #EDEEF0; display: inline-flex; align-items: center; gap: 4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Confirmed by receipt</span>
+    </div>
+    <div style="font-size: 12px; font-weight: 600; margin-top: 8px">Renewal chips</div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+      <span style="font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; background: #2A2213; color: #F4B740">Today</span>
+      <span style="font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #F4B740">Tomorrow</span>
+      <span style="font-size: 12px; padding: 4px 9px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #EDEEF0">In 11 days</span>
+      <span style="font-size: 12px; padding: 4px 9px; border-radius: 999px; background: #1C1F23; border: 1px solid #262A30; color: #EDEEF0">Nov 16</span>
+    </div>
+    <div style="font-size: 12px; font-weight: 600; margin-top: 8px">Logo tile</div>
+    <div style="display: flex; gap: 12px; align-items: center">
+      <div style="width: 40px; height: 40px; border-radius: 10px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600">N</div>
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #86D4BF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600">C</div>
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #AEB4F0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">L</div>
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #1C1F23; border: 1px solid #262A30; color: #A0A6AF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">?</div>
+      <span style="font-size: 12px; color: #A0A6AF; line-height: 1.5">40 / 32 / 28 px. In the extension these show the site's real icon from Chrome's cache; the letter tile is the fallback.</span>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section style="grid-column: 1 / 3; display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Cards</h2>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start">
+
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+        <span style="align-self: flex-start; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}">Please confirm</span>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">D</div>
+          <div><div style="font-size: 14px; font-weight: 600">Still paying for Dropbox?</div><div style="font-size: 12px; color: #A0A6AF">Plus · $119.88/yr</div></div>
+        </div>
+        <div style="display: flex; gap: 8px; font-size: 12px; color: #EDEEF0; background: #1C1F23; border-radius: 8px; padding: 8px 10px; line-height: 1.45">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A0A6AF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          Last receipt was 11 months ago
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: none; background: {{accent}}; color: #0D0E10; font-size: 12px; font-weight: 600">Yes, still paying</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">No, cancelled</button>
+        </div>
+      </div>
+
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #2A2213; color: #F4B740; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div><div style="font-size: 14px; font-weight: 600">Canva Pro trial ends tomorrow</div><div style="font-size: 12px; color: #A0A6AF">Trial ending</div></div>
+        </div>
+        <div style="font-size: 12px; color: #A0A6AF; line-height: 1.5">You'll be charged $14.99 on Oct 24 unless you cancel.</div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 12px; font-weight: 600">Cancel trial</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Keep it</button>
+        </div>
+      </div>
+
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #F0959A; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">N</div>
+          <div><div style="font-size: 14px; font-weight: 600">Netflix renews tomorrow</div><div style="font-size: 12px; color: #A0A6AF">Renewal reminder</div></div>
+        </div>
+        <div style="font-size: 12px; color: #A0A6AF; line-height: 1.5">$17.99 on Nov 10. You last visited 2 days ago.</div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Manage</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Keep it</button>
+        </div>
+      </div>
+
+      <div style="background: #15171A; border: 1px solid #262A30; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #1C1F23; border: 1px solid #262A30; box-sizing: border-box; color: #93B5FF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0">P</div>
+          <div><div style="font-size: 14px; font-weight: 600">Paramount+</div><div style="font-size: 12px; color: #F4B740; font-weight: 500">No visits in 64 days</div></div>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 6px">
+          <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">$95.88</span>
+          <span style="font-size: 12px; color: #A0A6AF">a year ($7.99/mo)</span>
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 12px; font-weight: 600">How to cancel</button>
+          <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">I still use it</button>
+        </div>
+      </div>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #A0A6AF">Please confirm (with its one-line reason) · trial ending · renewal reminder · worth reviewing. The same cards drive the popup's "Needs attention" list and the notifications.</p>
+  </section>
+
+  <!-- Buttons -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Buttons</h2>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+      <button style="height: 38px; padding: 0 16px; border-radius: 9px; border: none; background: {{accent}}; color: #0D0E10; font-size: 13px; font-weight: 600">Track it</button>
+      <button style="height: 38px; padding: 0 16px; border-radius: 9px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 13px; font-weight: 500">Not a subscription</button>
+      <button style="height: 38px; padding: 0 16px; border-radius: 9px; border: 1px solid #262A30; background: #15171A; color: #EDEEF0; font-size: 13px; font-weight: 500">Open full view</button>
+      <button style="height: 38px; padding: 0 16px; border-radius: 9px; border: 1px solid #FF7A7A; background: transparent; color: #FF7A7A; font-size: 13px; font-weight: 600">Cancel subscription</button>
+      <button aria-label="Open full view" style="width: 32px; height: 32px; border: none; border-radius: 8px; background: #1C1F23; color: #A0A6AF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg>
+      </button>
+      <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #3A3F47; background: transparent; color: #EDEEF0; font-size: 12px; font-weight: 500">Review</button>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #A0A6AF">Primary · secondary · quiet · cancel · icon · small (inside rows).</p>
+  </section>
+
+  <!-- Budget meter -->
+  <section style="display: flex; flex-direction: column; gap: 16px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A0A6AF; padding-bottom: 10px; border-bottom: 1px solid #262A30">Budget meter</h2>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="height: 6px; border-radius: 3px; background: #262A30; overflow: hidden"><div style="width: 62%; height: 100%; border-radius: 3px; background: {{accent}}"></div></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A0A6AF"><span>62% of your $100 budget</span><span style="font-variant-numeric: tabular-nums">$38.05 left</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="height: 6px; border-radius: 3px; background: #262A30; overflow: hidden"><div style="width: 94%; height: 100%; border-radius: 3px; background: #F4B740"></div></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A0A6AF"><span>94% of your $100 budget</span><span style="font-variant-numeric: tabular-nums; color: #F4B740">$6.05 left</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="height: 6px; border-radius: 3px; background: #FF7A7A"></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #A0A6AF"><span>$101.95 of your $100 budget</span><span style="font-variant-numeric: tabular-nums; color: #FF7A7A; font-weight: 600">$1.95 over</span></div>
+    </div>
+    <p style="margin: 0; font-size: 12px; color: #A0A6AF">Under · close (90%+) · over. Yearly plans count as price ÷ 12.</p>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8AB4FF","options":["#8AB4FF","#7CE3C4","#C9A7FF","#F4B740"]},"$preview":{"width":1300,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#8AB4FF' };
+  }
+}
+</script>
+</body>
+</html>
