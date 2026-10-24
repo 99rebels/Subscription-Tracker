@@ -7,15 +7,18 @@ import { cancelRoute } from "../src/lib/cancel.js";
 import { normalizeSubscription } from "../src/lib/model.js";
 
 const TODAY = "2026-10-22";
-const at = (iso) => new Date(`${iso}T12:00:00`).getTime();
 const sub = (fields) => normalizeSubscription({ id: fields.name, cycle: "monthly", domains: ["example.com"], ...fields });
 
-test("usage wording never says unused", () => {
-  assert.deepEqual(t.usage(sub({ name: "A", lastUsed: null }), TODAY), { text: "no visits on this computer", stale: true });
-  assert.deepEqual(t.usage(sub({ name: "A", lastUsed: at("2026-10-22") }), TODAY), { text: "visited today", stale: false });
-  assert.deepEqual(t.usage(sub({ name: "A", lastUsed: at("2026-10-21") }), TODAY), { text: "visited yesterday", stale: false });
-  assert.deepEqual(t.usage(sub({ name: "A", lastUsed: at("2026-10-20") }), TODAY), { text: "visited 2 days ago", stale: false });
-  assert.deepEqual(t.usage(sub({ name: "A", lastUsed: at("2026-08-19") }), TODAY), { text: "no visits in 64 days", stale: true });
+test("keep status: asks until you say you still use it, never says unused", () => {
+  assert.deepEqual(t.keepStatus(sub({ name: "A" }), TODAY), { ask: true, text: "still using it?", detail: null });
+  assert.deepEqual(t.keepStatus(sub({ name: "A", keptAt: "2026-10-02" }), TODAY), {
+    ask: false,
+    text: "you said you still use it on Oct 2",
+    detail: "We'll ask again in December.",
+  });
+  assert.deepEqual(t.keepStatus(sub({ name: "A", keptAt: "2026-06-01" }), TODAY), { ask: true, text: "still using it?", detail: "You last said you use it on Jun 1." });
+  assert.equal(t.keepStatus(sub({ name: "A", status: "trial" }), TODAY), null);
+  assert.equal(t.keepStatus(sub({ name: "A", status: "cancelled" }), TODAY), null);
 });
 
 test("dates and money", () => {
@@ -60,14 +63,11 @@ test("forecast note names the heavy months and yearly renewals", () => {
   assert.equal(t.forecastNote(forecast([subs[0]], TODAY)), null);
 });
 
-test("joinAnd, plural, cancelAllLabel", () => {
+test("joinAnd, plural", () => {
   assert.equal(t.joinAnd(["a"]), "a");
   assert.equal(t.joinAnd(["a", "b", "c"]), "a, b and c");
   assert.equal(t.plural(1, "visit"), "1 visit");
   assert.equal(t.plural(2, "visit"), "2 visits");
-  assert.equal(t.cancelAllLabel(3), "Cancel all three to save");
-  assert.equal(t.cancelAllLabel(2), "Cancel both to save");
-  assert.equal(t.cancelAllLabel(1), "Cancel it to save");
 });
 
 test("cancel route: stores win over the service's own site", () => {
@@ -82,12 +82,10 @@ test("cancel route: stores win over the service's own site", () => {
   assert.equal(cancelRoute({ name: "Mystery", domains: [] }).url, null);
 });
 
-test("ago and spottedAt", () => {
+test("ago", () => {
   const now = new Date("2026-10-22T16:00:00").getTime();
   assert.equal(t.ago(now - 20_000, now), "just now");
   assert.equal(t.ago(now - 12 * 60_000, now), "12 min ago");
   assert.equal(t.ago(now - 2 * 3_600_000, now), "2 hours ago");
   assert.equal(t.ago(now - 30 * 3_600_000, now), "yesterday");
-  assert.equal(t.spottedAt(new Date("2026-10-22T14:14:00").getTime(), now), "today, 2:14 PM");
-  assert.equal(t.spottedAt(new Date("2026-10-20T09:05:00").getTime(), now), "Oct 20, 9:05 AM");
 });

@@ -35,10 +35,8 @@ function pickFrom(store, keys) {
 globalThis.chrome = {
   storage: { local: area("local"), session: area("session"), onChanged: { addListener: (fn) => listeners.push(fn) } },
   runtime: { getURL: (path) => new URL(`../${path.replace(/^\//, "")}`, location.href).toString(), getManifest: () => ({}) },
-  tabs: { create: async ({ url }) => window.open(url, "_blank"), query: async () => [{ id: 1, url: "https://www.figma.com/checkout/success" }] },
-  scripting: { executeScript: async () => [{ result: "Figma Professional $16.00 per month" }] },
+  tabs: { create: async ({ url }) => window.open(url, "_blank") },
   sidePanel: { open: async () => {} },
-  history: { search: async () => [], getVisits: async () => [] },
   action: { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {}, setBadgeTextColor: async () => {} },
   windows: { getCurrent: async () => ({ id: 1 }) },
 };

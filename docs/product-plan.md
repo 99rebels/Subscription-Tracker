@@ -12,6 +12,8 @@ The product's job: **make sure you never pay for something you're not using, wit
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-10-24 | **Gmail only: no browsing history, no checkout detection.** Removed visit tracking ("last used", visit charts, cost per visit) and checkout detection (URL spotting + reading the price off the page). New signups are found from their receipt email: the re-sync now runs hourly and notifies "Track X?". Permissions drop `history`, `webNavigation`, `activeTab`, `scripting`, so the "Read your browsing history" install warning goes. | Founder: visits on one computer give false signals both ways (Netflix watched on the TV, insurance you'd never visit), and a tool reading your history can put people off. Price reading only worked if the user clicked our icon on the checkout page, which few would do; the receipt has better data and arrives anyway. Cost: a signup that sends no email at first (some trials) isn't seen until its first receipt or reminder. |
+| 2026-10-24 | **"Still using it?" replaces usage.** We ask on each renewal reminder ("Keep it" / "Cancel / manage"), on Detail, and in **Still using these?** on the Overview (one-tap Keep). A yes is remembered for 90 days. The cut plan, "Worth reviewing", the savings zero state and the monthly check-in count only what hasn't been kept. | Never wrong, because it's the user's own answer; fits the founder's problem ("know before I'm charged") better than guessing from visits. Agreed with the founder. |
 | 2026-10-23 | **First scan is paced to Gmail's quota and says how long it'll take**, showing what it finds as it goes. ~100 full emails a minute is a hard limit for our project (6,000 units/user/min, 60 per email since May 2026); later scans only read new mail. | Founder's 217-email scan took 134 s with 26 refusals. Pacing to the quota removes refusals; an honest time and live finds make the wait feel useful (founder suggested the live finds). |
 | 2026-10-23 | **The scan skips Gmail's Promotions and Social tabs** (plus a narrow receipt-subjects search of them), keeps a local copy of emails it has read so they're never downloaded twice, and shows results without waiting for the last few emails Gmail is slow to give (the background fetches those). | Founder: a 375-email scan took ~5 minutes. 42% of matches were promotions the parser discards; time went on rate-limit waits. Same scorecard with 43% fewer emails. |
 | 2026-10-23 | **Rebuild the receipt parser around email types** (feature 10): decide what each email *is* (receipt, reminder, trial, cancellation, failed payment, one-off order, other) before reading anything from it; only paid receipts count as charges; never default to monthly silently. Measured with a scorecard against the founder's real inbox and an answer sheet the founder corrects. | Founder testing: GoDaddy (yearly) came out monthly; a Canva trial-ending email was treated as a €12 monthly receipt. Both trace to "any email with a price is a charge". |
@@ -20,10 +22,10 @@ The product's job: **make sure you never pay for something you're not using, wit
 | 2026-10-22 | **Totals convert between currencies** at the European Central Bank's daily rates (via Frankfurter, no key). Fetched at most once a day and only when something is priced in another currency; the request carries no user data. Individual prices stay in their own currency. | Founder decision. Keeps "nothing leaves your computer" true for user data. |
 | 2026-10-22 | **Forecast leaves trials out** (matches the yearly total); the calendar shows them as "if you keep it". | Founder confirmed. |
 | 2026-10-22 | **Not now: a warning when something charges you after you cancelled.** Parked in the backlog. | Founder decision. Savings shows "Trials stopped in time" instead of "Surprise charges" until then. |
-| 2026-10-22 | **Cut plan only suggests subscriptions not opened in 30+ days**, ranked by monthly cost × days since the last visit; trials and "I still use it on another device" are never suggested. | Suggesting something used yesterday would feel wrong; if the not-visited ones don't cover the gap, it says how much they'd save instead. |
+| 2026-10-22 | *(Superseded 2026-10-24.)* **Cut plan only suggests subscriptions not opened in 30+ days**, ranked by monthly cost × days since the last visit; trials and "I still use it on another device" are never suggested. | Suggesting something used yesterday would feel wrong; if the not-visited ones don't cover the gap, it says how much they'd save instead. |
 | 2026-10-22 | **Savings › "Also looked after" shows "Trials stopped in time"** instead of "Surprise charges" for now. | We can't count surprise charges honestly until the re-sync checks for charges after a cancellation (backlog). |
-| 2026-10-22 | **`scripting` permission added** alongside `activeTab`: reading the checkout page needs both. No install warning. | Found during the popup build (BUILD.md step 3). |
-| 2026-10-22 | **Checkout price reading uses `activeTab` only** (read the page when the user clicks our icon). A curated site list, if ever added, will be an *optional* permission requested in context, so existing users aren't disabled. The receipt email fills in prices we miss. | No extra install warning; keeps the privacy pitch. Closes open question on feature 3. |
+| 2026-10-22 | *(Superseded 2026-10-24.)* **`scripting` permission added** alongside `activeTab`: reading the checkout page needs both. No install warning. | Found during the popup build (BUILD.md step 3). |
+| 2026-10-22 | *(Superseded 2026-10-24.)* **Checkout price reading uses `activeTab` only** (read the page when the user clicks our icon). A curated site list, if ever added, will be an *optional* permission requested in context, so existing users aren't disabled. The receipt email fills in prices we miss. | No extra install warning; keeps the privacy pitch. Closes open question on feature 3. |
 | 2026-10-22 | **Build order:** 1) data model + colour tokens, 2) side panel Overview / Subscriptions / Detail, 3) popup Home, 4) Gmail scan results + Review, 5) Savings + Settings. | Almost every screen depends on the new data fields, so they come first. Gmail OAuth is being set up in parallel so the parser can be tested on a real inbox early. |
 | 2026-10-22 | **No framework, no build step.** Plain JS modules plus a small helper for drawing screens. | Simplest to load and debug; MV3 forbids remote code anyway, so any library would have to be bundled. |
 | 2026-10-22 | `docs/designs/` matches the live canvas as of the start of the build. | Founder confirmed. |
@@ -36,7 +38,7 @@ The product's job: **make sure you never pay for something you're not using, wit
 | 2026-10-22 | **Popup: 380 wide, max 600 tall** (Chrome's limit is 800 × 600). Header and footer fixed; the middle scrolls. | Popups scroll natively; better than cramming. |
 | 2026-10-22 | **Design dark mode first**; light mode adapted per view later. Palette: background #0D0E10, surface #15171A, accent #8AB4FF (adjustable), amber #F4B740 for "look at this", red #FF7A7A only for cancelling. Inter, tabular figures. Design canvas: https://claude.ai/artifact/ETmgXkGUmeJnW56Sx9pUXH | Founder: pick one mode for now. |
 | 2026-10-22 | Pricing deferred. Reference point: Subwatch charges $11.99 one-time. | |
-| 2026-10-22 | Usage wording is "No visits on this computer", never "Unused". | We can't see phones or TVs; being wrong about "unused" destroys trust. |
+| 2026-10-22 | *(Superseded 2026-10-24.)* Usage wording is "No visits on this computer", never "Unused". | We can't see phones or TVs; being wrong about "unused" destroys trust. |
 
 ## Feature notes
 
@@ -76,6 +78,8 @@ Every "Please confirm" item gets a **one-line reason** so the user can answer wi
 - "Couldn't find a price in the receipt"
 
 ### 3. Price at checkout without manual input
+
+> **Dropped 2026-10-24:** checkout detection and price reading were removed (decisions table). Kept below for history.
 
 This is a core feature. Plan: **layers, each filling in what the previous one couldn't.**
 
@@ -217,7 +221,7 @@ The background re-sync uses the same pipeline, so trials found there become "Can
 
 1. **Shared plans:** mark a subscription as split ("Spotify Family, shared by 4") so totals show *your* share.
 2. **Overlap alerts:** "YouTube Premium already includes YouTube Music, and you also pay for Spotify." An `includes` field in the services list plus a rule.
-3. **Heads-up at checkout:** when you're about to subscribe, "You cancelled this in May after 2 visits" or "This adds $16/mo and takes you over budget." Builds on checkout detection.
+3. *(Needs checkout detection, removed 2026-10-24.)* **Heads-up at checkout:** when you're about to subscribe, "You cancelled this in May after 2 visits" or "This adds $16/mo and takes you over budget." Builds on checkout detection.
 4. **Shareable savings card:** an image like "I've saved $412 with Subscription Check" with no subscription details. Helps distribution, our main edge.
 5. **Pause instead of cancel:** some services let you pause; show it in the cancel help where we know it's offered.
 6. **Open-source the extension:** strongest possible proof for the privacy promise. Weigh against monetisation.
@@ -241,7 +245,7 @@ The background re-sync uses the same pipeline, so trials found there become "Can
 ## Backlog (rough priority)
 
 1. Three-group import review screen (feature 2) + status reasons (feature 1).
-2. Price capture at checkout with `activeTab` + curated list (feature 3, layer 1).
+2. ~~Price capture at checkout with `activeTab` + curated list (feature 3, layer 1).~~ Dropped 2026-10-24.
 3. Background Gmail sync: receipt confirmation, price-increase alerts, cancellation verification (feature 3, layer 2).
 4. Widgets / UI pass (next up, UI-first).
 5. Budget + cut plan (feature 4).
@@ -255,4 +259,4 @@ The background re-sync uses the same pipeline, so trials found there become "Can
 
 - Pricing model: one-time (Subwatch: $11.99) vs. subscription vs. free + paid extras. Ongoing costs to cover: keeping cancel links current, a possible backend later.
 - A more distinctive name? "Subscription Check" is generic and hard to stand out with in store search.
-- Which permission option for checkout price reading (see feature 3)? Affects install conversion and store review.
+- ~~Which permission option for checkout price reading (see feature 3)? Affects install conversion and store review.~~ Resolved 2026-10-24: no checkout reading at all.

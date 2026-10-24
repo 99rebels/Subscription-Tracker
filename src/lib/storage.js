@@ -2,9 +2,6 @@
 //
 // schemaVersion: number                                   see model.js migrations
 // subscriptions: [subscription]                           shape documented in model.js
-// visits:        { [subscriptionId]: { [weekStart]: n } } visits per week on this computer
-// pending:       [{ id, name, domain, url, detectedAt }]  checkout detections awaiting confirmation
-// dismissed:     { [domain]: timestamp }                  detections the user said "no" to
 // settings:      DEFAULT_SETTINGS below
 // review:        [{ id, item, kind, title, reason, detail, yes, no, createdAt }]  questions from the scan (scan.js)
 // sorted:        [{ id, name, outcome, note, at, subId, review }]  decided items, newest first, for Undo
@@ -14,7 +11,6 @@
 // installedAt:   "YYYY-MM-DD"                             savings are counted from here
 
 import { migrate, normalizeSubscription, SCHEMA_VERSION } from "./model.js";
-import { addVisit } from "./usage.js";
 import { loadServices } from "./services.js";
 
 export const DEFAULT_SETTINGS = {
@@ -24,8 +20,6 @@ export const DEFAULT_SETTINGS = {
   trialReminderDays: 3,
   monthlyCheckIn: true,
   calendarSync: false,
-  detectCheckouts: true,
-  trackVisits: true,
   theme: "system", // "system" | "light" | "dark"
   currency: "USD",
 };
@@ -33,9 +27,6 @@ export const DEFAULT_SETTINGS = {
 const DEFAULTS = {
   schemaVersion: SCHEMA_VERSION,
   subscriptions: [],
-  visits: {},
-  pending: [],
-  dismissed: {},
   review: [],
   sorted: [],
   gmail: { connected: false, lastScanAt: null, lastCheckedAt: null, scanned: 0, sample: false },
@@ -84,46 +75,14 @@ export async function upsertSubscription(sub) {
 }
 
 export async function deleteSubscription(id) {
-  const { subscriptions, visits } = await load("subscriptions", "visits");
-  delete visits[id];
-  await save({ subscriptions: subscriptions.filter((s) => s.id !== id), visits });
+  const { subscriptions } = await load("subscriptions");
+  await save({ subscriptions: subscriptions.filter((s) => s.id !== id) });
 }
 
-// Count one visit now for each of these subscriptions.
-export async function recordVisits(ids, now = Date.now()) {
-  if (!ids.length) return;
-  const { visits } = await load("visits");
-  for (const id of ids) visits[id] = addVisit(visits[id], now);
-  await save({ visits });
-}
-
-// Merge weekly counts (e.g. backfilled from history), keeping the larger count per week.
-export async function mergeWeeklyVisits(id, weekly) {
-  const { visits } = await load("visits");
-  const current = visits[id] ?? {};
-  for (const [week, count] of Object.entries(weekly)) current[week] = Math.max(current[week] ?? 0, count);
-  visits[id] = current;
-  await save({ visits });
-}
-
-export async function removePending(id) {
-  const { pending } = await load("pending");
-  await save({ pending: pending.filter((p) => p.id !== id) });
-  await updateBadge();
-}
-
-export async function dismissPending(id) {
-  const { pending, dismissed } = await load("pending", "dismissed");
-  const item = pending.find((p) => p.id === id);
-  if (item) dismissed[item.domain] = Date.now();
-  await save({ pending: pending.filter((p) => p.id !== id), dismissed });
-  await updateBadge();
-}
-
-// Badge = things waiting in Review (signups spotted at checkout + questions).
+// Badge = questions waiting in Review.
 export async function updateBadge() {
-  const { pending, review } = await load("pending", "review");
-  const count = pending.length + review.length;
+  const { review } = await load("review");
+  const count = review.length;
   await chrome.action.setBadgeText({ text: count ? String(count) : "" });
   // The accent, not amber: amber is never a solid fill (HANDOFF visual rules).
   await chrome.action.setBadgeBackgroundColor({ color: "#8AB4FF" });

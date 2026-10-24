@@ -2,7 +2,6 @@
 // into tracked subscriptions. Pure, so it's tested in Node; background.js does
 // the fetching, storing and notifying.
 //
-//   - a receipt confirms a price read at checkout (or corrects it)
 //   - a higher amount than last time is a price rise
 //   - a cancellation email confirms a cancellation the user started with us;
 //     otherwise it becomes a question ("Did you cancel X?"), never a silent change
@@ -38,7 +37,7 @@ function mergeCharges(existing, incoming) {
  * subscriptions: stored list. analysis: analyseInbox() over the recent emails.
  * known: keys already asked about or answered (so we never ask twice).
  * Returns { subscriptions, events, questions }:
- *   events:    { type: "confirmed" | "price_corrected" | "price_rise" | "cancel_confirmed", subId, ... }
+ *   events:    { type: "price_rise" | "cancel_confirmed", subId, ... }
  *   questions: { kind: "cancel_email", item } | { kind: "new", item } for Review
  */
 export function mergeReceipts(subscriptions, analysis, { today, known = new Set() }) {
@@ -79,9 +78,7 @@ export function mergeReceipts(subscriptions, analysis, { today, known = new Set(
     const latest = charges.at(-1);
     sub.charges = charges;
 
-    if (sub.priceSource === "checkout" && !sub.confirmedByReceipt) {
-      events.push(Math.abs(Number(sub.price) - latest.amount) < 0.01 ? { type: "confirmed", subId: sub.id } : { type: "price_corrected", subId: sub.id, from: Number(sub.price), to: latest.amount });
-    } else if (previous && latest.amount > previous.amount * 1.005 && added.includes(latest)) {
+    if (previous && latest.amount > previous.amount * 1.005 && added.includes(latest)) {
       events.push({ type: "price_rise", subId: sub.id, from: previous.amount, to: latest.amount, date: latest.date });
     }
     sub.price = latest.amount;

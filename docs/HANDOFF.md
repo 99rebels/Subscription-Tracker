@@ -1,25 +1,28 @@
 # Build handoff: Subscription Check
 
+> **Update (2026-10-24): browsing history and checkout detection were removed.** Subscriptions come only from Gmail (or manual add), and "last used" is replaced by asking "Still using it?". Decision and reasons: product-plan decisions table; what changed: BUILD.md step 7.
+>
 > **Status (2026-10-23): the build is complete.** Start with "Where things stand" at the top of [BUILD.md](BUILD.md): one open bug (renewal reminder didn't arrive in testing) and what's left.
 
 For the agent building the product. Read this first, then **[BUILD.md](BUILD.md) (build plan and progress: where to pick up)**, then [product-plan.md](product-plan.md) (decisions, feature notes, reasoning) and skim [competitors.md](competitors.md). Written 2026-10-22.
 
 ## What we're building
 
-A Chrome extension (Manifest V3) that shows people every subscription they pay for, what it costs, when they last used it, and when they're next charged, then makes cancelling easy. The founder's problem: *"I know I'm paying for things I don't need, I can't remember what they are, and I want to know before I'm charged."*
+A Chrome extension (Manifest V3) that shows people every subscription they pay for, what it costs and when they're next charged, asks whether they still use it before they pay again, then makes cancelling easy. The founder's problem: *"I know I'm paying for things I don't need, I can't remember what they are, and I want to know before I'm charged."*
 
-It finds subscriptions three ways, with as little typing as possible:
-1. **Gmail scan:** reads ~15 months of receipts locally in the browser.
-2. **Checkout detection:** notices signups as they happen and asks to confirm.
-3. **Manual add:** fallback only.
+It finds subscriptions two ways, with as little typing as possible:
+1. **Gmail scan:** reads ~15 months of receipts locally in the browser, then checks for new ones every hour (that's how new signups are found).
+2. **Manual add:** fallback only.
+
+(Checkout detection was a third way until 2026-10-24; removed by the founder, see product-plan.)
 
 ## Ground rules (decided, don't change without asking the founder)
 
 - **The designs are the spec (UX-first).** Build what the screens need, including features that were "backlog" earlier. There's no separate V1/V2 list.
 - **Local-first. No servers for user data, no bank linking, no data selling.** Everything lives in `chrome.storage` in the user's browser. "Nothing leaves your computer" appears in the UI and must stay true.
 - **No LLM.** Every number, insight and sentence comes from code: rules + sentence templates (product-plan §8).
-- **Never add a subscription silently.** Detections and uncertain scan results are always confirmed by the user.
-- **Wording about usage:** "No visits on this computer" / "No visits in 64 days", never "unused". We can't see phones or TVs.
+- **Never add a subscription silently.** New receipts and uncertain scan results are always confirmed by the user.
+- **No usage tracking.** We don't read browsing history and never say "unused": we ask "Still using it?" and remember the answer for 90 days (2026-10-24, replaced visit counts).
 - **Honest savings:** count only cancellations made while using the extension, from the cancellation date onward (product-plan §6).
 - **Cancel help:** one verified link per service + general steps. If receipts come from Apple / Google Play / Amazon / PayPal, send the user there instead (product-plan §9).
 
@@ -32,7 +35,7 @@ It finds subscriptions three ways, with as little typing as possible:
 | Surface | Screen | File |
 |---|---|---|
 | Popup (380 wide, max 600 tall; header + footer fixed, middle scrolls) | Home | `Main.dc.html` |
-| | Detected signup | `PopupDetected.dc.html` |
+| | Detected signup (**removed 2026-10-24**) | `PopupDetected.dc.html` |
 | | First run | `PopupEmpty.dc.html` |
 | Side panel (designed at 360 wide, must stretch when the user drags it wider; header + tabs fixed, content scrolls) | Overview (incl. savings card, 12-month forecast, ring chart) | `PanelOverview.dc.html` |
 | | Savings card, zero state (before any cancellation) | `SavingsZero.dc.html` |
@@ -96,12 +99,11 @@ Things that were decided on reasoning or memory rather than tested. Check them b
 3. **Chrome APIs:**
    - `chrome.sidePanel` (opening it from the popup button needs a user gesture)
    - the `favicon` permission and URL format
-   - `chrome.action.openPopup` (used as a fallback from notification clicks; may need a focused window)
    - notification buttons on macOS
    - `unlimitedStorage` if needed
-4. **The final permission list before the first store release.** Adding a permission later disables the extension for existing users until they approve it. Target install warning: only "Read your browsing history". Checkout price reading likely needs `activeTab` and/or host permissions for a curated list of payment processors (product-plan §3). Weigh the extra install warning.
+4. **The final permission list before the first store release.** Adding a permission later disables the extension for existing users until they approve it. **Since 2026-10-24** the list is storage, alarms, notifications, identity, sidePanel, favicon: no "Read your browsing history" warning any more. Check what (if anything) `favicon` shows on install.
 5. **Google OAuth.** *Stage 1 done (2026-10-22):* Google Cloud project "Subscription Check" under the 99rebels organisation; Gmail API enabled; consent screen External, **Testing**, restricted scope `gmail.readonly`; dev Client ID (Chrome Extension type) is in `manifest.json`. **Since 2026-10-23 the extension ID is fixed** by the `key` in `manifest.json` (ID `poifdgfdbgmjpblgaogeidddepffcpjp`), so any copy loaded unpacked, from any folder or worktree, signs in; the OAuth client's Item ID must match it. The private key (`.pem`) lives outside the repo with the founder: needed for the Web Store, never committed. Test users are managed in Google Auth Platform → Audience. Restricted Gmail scope: the free verification is required for launch. The paid security assessment (CASA) should not apply because nothing is sent to a server, but confirm with Google in writing before launch. Verification takes 2–8 weeks; flag to the founder when it's time to start.
-6. **Checkout detection false positives** (generic "thank you" pages). It only ever asks, but too many prompts annoy.
+6. ~~Checkout detection false positives~~ (removed 2026-10-24).
 7. **Date handling:** local `YYYY-MM-DD` strings throughout. Check month-end and time-zone edges in any new code.
 
 ## Not decided: ask the founder

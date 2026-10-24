@@ -72,7 +72,7 @@ export function renderSettings(state, actions) {
         h("label", { for: "budget", style: "font-size: 13px; color: var(--text)" }, "Monthly budget"),
         h("div", { style: "display: flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 8px; background: var(--raised); border: 1px solid var(--border)" }, h("span", { class: "muted" }, SYMBOLS[settings.currency] ?? ""), budgetInput),
       ),
-      kv(line("Suggest what to cut", "When you go over, based on what you use least"), toggle(settings.suggestCuts, "Suggest what to cut", (v) => setSetting("suggestCuts", v))),
+      kv(line("Suggest what to cut", "When you go over, from what you haven't said you still use"), toggle(settings.suggestCuts, "Suggest what to cut", (v) => setSetting("suggestCuts", v))),
     ),
   );
 
@@ -130,8 +130,6 @@ export function renderSettings(state, actions) {
       "div",
       { class: "card" },
       gmailRow,
-      kv(line("Spot new subscriptions at checkout", "We'll ask before adding anything"), toggle(settings.detectCheckouts, "Spot new subscriptions at checkout", (v) => setSetting("detectCheckouts", v))),
-      kv(line('Track visits for "last used"', "Only on sites you subscribe to"), toggle(settings.trackVisits, "Track visits for last used", (v) => setSetting("trackVisits", v))),
     ),
   );
 
@@ -166,7 +164,7 @@ export function renderSettings(state, actions) {
             "button",
             {
               class: "btn sm",
-              onclick: async () => download(`subscription-check-backup-${today()}.json`, toBackup(await load("subscriptions", "visits", "settings", "review", "sorted", "stats", "installedAt", "dismissed")), "application/json"),
+              onclick: async () => download(`subscription-check-backup-${today()}.json`, toBackup(await load("subscriptions", "settings", "review", "sorted", "stats", "installedAt")), "application/json"),
             },
             "Backup file",
           ),
@@ -175,7 +173,7 @@ export function renderSettings(state, actions) {
     : [];
   const data = section(
     "Your data",
-    h("div", { class: "caption", style: "display: flex; gap: 10px; line-height: 1.5; padding: 0 2px" }, icon("lock", { size: 14 }), "Everything is stored in this browser. We don't have servers, and we never see your email or browsing."),
+    h("div", { class: "caption", style: "display: flex; gap: 10px; line-height: 1.5; padding: 0 2px" }, icon("lock", { size: 14 }), "Everything is stored in this browser. We don't have servers, and we never see your email."),
     h(
       "div",
       { class: "card" },
@@ -202,7 +200,7 @@ async function restore(file, actions) {
     if (!confirm(`Replace what's here with this backup (${t.plural(data.subscriptions.length, "subscription")})?`)) return;
     const { gmail } = await load("gmail");
     await chrome.storage.local.clear();
-    await save({ ...data, gmail: { ...gmail }, pending: [] });
+    await save({ ...data, gmail: { ...gmail } });
     await updateBadge();
     ui.message = { text: `Restored ${t.plural(data.subscriptions.length, "subscription")}.` };
   } catch (err) {

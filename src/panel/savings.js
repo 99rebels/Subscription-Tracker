@@ -113,7 +113,7 @@ function zeroState(subs, today, currency, conv) {
     { style: "display: flex; flex-direction: column; gap: 10px" },
     h("div", { class: "caption" }, "You could be saving"),
     h("div", { style: "display: flex; align-items: baseline; gap: 4px" }, h("span", { class: "figure" }, t.money(w.monthly, currency)), h("span", { class: "muted", style: "font-size: 15px" }, "/mo")),
-    h("div", { class: "caption", style: "line-height: 1.45" }, `Going to ${t.plural(w.items.length, "subscription")} you haven't opened in 30+ days. That's ${t.money(w.yearly, currency)} a year.`),
-    h("a", { class: "btn quiet md", href: "#subscriptions?filter=stale", style: "align-self: flex-start" }, "Review them"),
+    h("div", { class: "caption", style: "line-height: 1.45" }, `Going to ${t.plural(w.items.length, "subscription")} you haven't said you still use. That's ${t.money(w.yearly, currency)} a year.`),
+    h("a", { class: "btn quiet md", href: "#subscriptions?filter=check", style: "align-self: flex-start" }, "Check them"),
   );
 }

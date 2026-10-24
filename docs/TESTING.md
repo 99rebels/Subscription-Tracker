@@ -30,22 +30,20 @@ The build has been checked with unit tests and with a preview page that fakes Ch
 - [ ] The side panel stretches properly when you drag it wider.
 - [ ] Site icons: do real logos show (Netflix's red N, and so on), or letter tiles? Letter tiles are expected for sites you've never visited.
 - [ ] Settings › Theme: Light and Dark switch straight away. (Light is a placeholder look until it's designed.)
-- [ ] `chrome://extensions` › Subscription Check › **Details** › Permissions lists the warnings the install prompt will show. Is it just "Read your browsing history", or is there also a line about website icons? (See "Before the first store release" below.)
+- [ ] `chrome://extensions` › Subscription Check › **Details** › Permissions lists the warnings the install prompt will show. Since 2026-10-24 there's no browsing-history permission. Is the list empty, or is there a line about website icons? (See "Before the first store release" below.)
 
-## 3. Spotting a signup at checkout
+## 3. "Still using it?"
 
-Use a free trial or a cheap plan you were going to buy anyway, or a test checkout page if you have one.
-
-- [ ] After paying, a notification asks **Did you just subscribe to …?** and the icon shows a badge.
-- [ ] Click the extension icon **while still on the confirmation page**. Is the price read from the page?
-- [ ] **Track it** adds it; **Not a subscription** dismisses it.
-- [ ] While browsing normally for a day: any false alarms on ordinary "thank you" pages? (HANDOFF validate #6)
+- [ ] After a scan, the Overview shows **Still using these?** with everything you're paying for. **Keep** removes a row; the row itself opens Detail.
+- [ ] Detail on one you haven't kept: **Still using it?** card. **Yes, keep it** replaces it with "Still using it · You said yes, <date>"; **No, show me how to cancel** scrolls to the cancel steps.
+- [ ] Subscriptions › **Still using?** filter lists the same ones; the rows say "still using it?" in amber.
+- [ ] A new signup: within about an hour of its receipt email, a notification asks **Track …?** and it's waiting in Review.
 
 ## 4. Notifications (macOS)
 
-Edit a subscription's next charge to tomorrow (Detail › Edit) and wait up to an hour, or reload the extension to trigger the check.
+Edit a subscription's next charge to tomorrow (Detail › Edit). The reminder should now arrive within seconds of saving (2026-10-24 fix: it used to wait for the hourly check).
 
-- [ ] The renewal notification appears, and its buttons work (**Cancel / manage**, **Keep it**).
+- [ ] The renewal notification appears, and its buttons work (**Cancel / manage**, **Keep it**). **Keep it** also counts as "yes, I still use it": the subscription leaves **Still using these?**.
 - [ ] Clicking the notification opens the side panel at that subscription. If a tab opens instead, note it: it's a fallback, but worth knowing.
 
 ## 5. Cancelling
@@ -67,5 +65,5 @@ Signed in to each service you use, does the link on its Detail page open the pla
 
 ## Before the first store release (not now)
 
-- The install prompt should only say **"Read your browsing history"** (HANDOFF validate #4). Check it on the Web Store's test install. The `favicon` permission (real site logos) has its own warning, "Access the icons of the websites you visit", and it's unconfirmed whether Chrome folds it into the history warning. If it shows as a separate line, the choice is: keep it, or drop it and use letter tiles only (one line in `manifest.json`; the tiles already fall back to letters).
+- Since 2026-10-24 the only permission that might show a warning is `favicon` (real site logos), which may say something like "Access the icons of the websites you visit"; unconfirmed. Check it on the Web Store's test install (HANDOFF validate #4). If it shows, the choice is: keep it, or drop it and use letter tiles only (one line in `manifest.json`; the tiles already fall back to letters), for an install with no warnings at all.
 - Google's OAuth verification (2–8 weeks) needs starting before launch (HANDOFF validate #5).

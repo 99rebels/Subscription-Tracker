@@ -1,11 +1,11 @@
 // Wording for the screens: every sentence is a template filled from numbers in
 // summary.js (product-plan §8, no LLM). Pure, so it's tested in Node.
-// Usage wording rule (HANDOFF): "no visits on this computer" / "no visits in N
-// days", never "unused"; we can't see phones or TVs.
+// We can't see whether something is used, so we never say "unused": we ask
+// "Still using it?" and remember the answer (summary.js needsCheck).
 
 import { formatMoney, monthlyPrice } from "../lib/money.js";
-import { daysSinceVisit, STALE_AFTER_DAYS } from "../lib/summary.js";
-import { parseISODate } from "../lib/dates.js";
+import { needsCheck, ASK_AGAIN_AFTER_DAYS } from "../lib/summary.js";
+import { addDays, parseISODate } from "../lib/dates.js";
 
 const LOCALE = undefined; // the browser's
 
@@ -59,16 +59,6 @@ export function ago(ms, now = Date.now()) {
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-// When a signup was spotted: "just now", "12 min ago", "today, 2:14 PM", "Oct 20, 9:05 AM"
-export function spottedAt(ms, now = Date.now()) {
-  const minutes = Math.round((now - ms) / 60_000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes} min ago`;
-  const d = new Date(ms);
-  const time = d.toLocaleTimeString(LOCALE, { hour: "numeric", minute: "2-digit" });
-  return d.toDateString() === new Date(now).toDateString() ? `today, ${time}` : `${d.toLocaleDateString(LOCALE, { month: "short", day: "numeric" })}, ${time}`;
-}
-
 // 0 -> "today", 1 -> "tomorrow", 11 -> "in 11 days"
 export function inDays(n) {
   if (n <= 0) return "today";
@@ -79,15 +69,16 @@ export function inDays(n) {
 // ---------------------------------------------------------------------------
 // Subscriptions
 
-// "visited 2 days ago" / "no visits in 64 days" / "no visits on this computer".
-// stale is true for the amber wording.
-export function usage(sub, today) {
-  const days = daysSinceVisit(sub, today);
-  if (days === null) return { text: "no visits on this computer", stale: true };
-  if (days <= 0) return { text: "visited today", stale: false };
-  if (days === 1) return { text: "visited yesterday", stale: false };
-  if (days < STALE_AFTER_DAYS) return { text: `visited ${days} days ago`, stale: false };
-  return { text: `no visits in ${days} days`, stale: true };
+// Whether the user has told us they still use it.
+//   ask: true  -> "still using it?" (amber): never asked, or not in ~3 months
+//   ask: false -> "you said you still use it on Oct 2" (quiet)
+// null for trials and cancelled ones, which aren't asked.
+export function keepStatus(sub, today) {
+  if (sub.status !== "active") return null;
+  if (needsCheck(sub, today)) {
+    return { ask: true, text: "still using it?", detail: sub.keptAt ? `You last said you use it on ${shortDate(sub.keptAt)}.` : null };
+  }
+  return { ask: false, text: `you said you still use it on ${shortDate(sub.keptAt)}`, detail: `We'll ask again in ${monthName(addDays(sub.keptAt, ASK_AGAIN_AFTER_DAYS).slice(0, 7))}.` };
 }
 
 // "Canva Pro" (name + plan, unless the name already includes it)
@@ -151,13 +142,6 @@ export function forecastNote(forecast) {
   const months = joinAnd(heavy.map((m) => monthName(m.month)));
   const verb = heavy.length === 1 ? "is" : "are";
   return { months, verb, names, renews: names.length === 1 ? "renews" : "renew", price };
-}
-
-// "Cancel all three to save" / "Cancel it to save"
-const COUNT_WORDS = ["", "one", "both", "all three", "all four", "all five", "all six", "all seven", "all eight", "all nine"];
-export function cancelAllLabel(n) {
-  if (n === 1) return "Cancel it to save";
-  return `Cancel ${COUNT_WORDS[n] ?? `all ${n}`} to save`;
 }
 
 // "Canva Pro trial ends in 2 days"

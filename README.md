@@ -1,6 +1,6 @@
 # Subscription Check
 
-A Chrome extension (Manifest V3) that finds every subscription you pay for, what it costs, when you last used it and when you're next charged, then makes cancelling easy. Everything is stored locally in `chrome.storage.local`; nothing leaves your computer.
+A Chrome extension (Manifest V3) that finds every subscription you pay for from your Gmail receipts, what it costs and when you're next charged, asks whether you still use it before each charge, then makes cancelling easy. Everything is stored locally in `chrome.storage.local`; nothing leaves your computer.
 
 **Building this?** Start with [docs/HANDOFF.md](docs/HANDOFF.md), then [docs/BUILD.md](docs/BUILD.md) (build plan and progress). Testing in real Chrome: [docs/TESTING.md](docs/TESTING.md).
 
@@ -42,20 +42,19 @@ The OAuth client ID in `manifest.json` belongs to the extension ID **`poifdgfdbg
 | Screens | `src/popup/`, `src/panel/`, `src/ui/` | Popup for a quick look; side panel for everything else (Overview, Subscriptions, Review, Detail, Savings, Settings, Gmail scan). Built from `docs/designs/`; plain JS modules, no build step. |
 | Numbers and wording | `src/lib/summary.js`, `src/ui/text.js` | Totals, forecast, categories, savings, budget and cut plan; every sentence is a template (no LLM). |
 | Gmail scan | `src/lib/receipts.js`, `scan.js`, `gmail.js` | Reads ~15 months of receipts in the browser (read-only), groups them by merchant, works out price, cycle, renewal, trial and cancellation, and sorts the results into "You're paying for", "Please confirm" (with a reason) and "Not added". |
-| Gmail re-sync | `src/lib/resync.js`, `src/background.js` | Every 6 hours: new receipts confirm prices and catch price rises and cancellation emails; anything new becomes a question in Review. Never adds anything silently. |
-| Checkout detection | `src/lib/detection.js`, `checkout-price.js` | Spots signups from the URL; clicking the icon on the confirmation page reads the price from the page (`activeTab`). Always asks before adding. |
-| Last used | `src/lib/usage.js`, `src/background.js` | Visits to a subscription's sites, counted per week; backfilled from Chrome history (~90 days) when a subscription is added. |
+| Gmail re-sync | `src/lib/resync.js`, `src/background.js` | Every hour and when the browser opens: new receipts confirm prices, catch price rises and cancellation emails, and anything new becomes a question in Review (with a notification). Never adds anything silently. This is also how new signups are found. |
+| Still using it? | `src/lib/summary.js` `needsCheck`, `src/ui/text.js` `keepStatus` | We can't see usage (phones, TVs, insurance you never visit), so we ask: on each renewal reminder, on Detail, and in "Still using these?" on the Overview. A yes (`keptAt`) stops the question for 90 days. The cut plan only suggests what you haven't kept. |
 | Reminders | `src/background.js`, `src/lib/calendar.js` | Notifications before renewals and trial ends, a monthly check-in, and `.ics` / Google Calendar events that work with Chrome closed. |
 | Cancel help | `data/services.json`, `src/lib/cancel.js` | One link per service plus general steps; receipts from Apple, Google Play, Amazon or PayPal send you there instead. |
 | Currencies | `src/lib/fx.js` | Totals convert at the ECB's daily rates, fetched only when something is priced in another currency; the request carries no user data. |
 
-Permissions: `storage`, `alarms`, `notifications`, `history`, `webNavigation`, `identity` (Gmail sign-in), `sidePanel`, `favicon` (site logos from Chrome's cache), `activeTab` + `scripting` (reading a price from the checkout page you're on, only when you click the icon). No host permissions.
+Permissions: `storage`, `alarms`, `notifications`, `identity` (Gmail sign-in), `sidePanel`, `favicon` (site logos from Chrome's cache). No browsing history, no host permissions.
 
 ## Known limitations
 
 - Cancel links have only been checked automatically (they load); whether each opens the right page once signed in needs a person (BUILD.md).
 - The receipt parser hasn't been run on real inboxes yet. Apple and Google Play receipts show as one entry per store rather than per app.
-- "Last used" counts any visit to the site (watching free YouTube counts for YouTube Premium), and usage on other devices isn't seen.
+- A signup with no email (some free trials start silently) isn't found until its first receipt or reminder email arrives. It can be added by hand.
 - Light mode uses placeholder colours until it's designed.
 
 ## Roadmap and product notes

@@ -2,19 +2,15 @@
   "manifest_version": 3,
   "name": "Subscription Check",
   "version": "0.1.0",
-  "description": "Track your subscriptions, see when you last used them, get reminded before you're charged, and cancel in one click.",
+  "description": "Finds your subscriptions from your Gmail receipts, reminds you before you're charged, and makes cancelling easy.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuSt0ob9SJ5oxYgfo8XtCyKObcn49NsCpNMMODCTV4QgRwWVCT/THNDTY8L5HaBEQ8SoL0zfijyDG5AHLjRjJkqsl9/IQogNTYkD6+tm6y6qX94F1ifBCP4R25EhBNYpBnYphcVV+TKO548pZVvNB4GFjdScrLAmhErSvzqBognxIhAYTxEBF1UgGR5fIRONsyOlrR4lplPme2SdmyC4yXGhLPHNn7pHFtKBpC+W1CzzoqJDifV98vCr9ZITW/2FrQLaA8NJ6d3G+GApZuTGOhZDEa6Z7sHb7wHsVgXcSlvTnShh4PHpmUbEMYbaG3tp0VI1OSPvH31PbEAEBmcLqKQIDAQAB",
   "permissions": [
     "storage",
     "alarms",
     "notifications",
-    "history",
-    "webNavigation",
     "identity",
     "sidePanel",
-    "favicon",
-    "activeTab",
-    "scripting"
+    "favicon"
   ],
   "background": {
     "service_worker": "src/background.js",

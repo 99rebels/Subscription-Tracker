@@ -130,6 +130,18 @@ button.row:hover {
   background: var(--raised);
   color: var(--text);
 }
+/* A row with its own button (e.g. "Keep"): the link covers the rest of the row. */
+.row-link {
+  display: flex;
+  align-items: center;
+  gap: inherit;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: inherit;
+}
+.row:has(> .row-link:hover) {
+  background: var(--raised);
+}
 .row-main {
   flex-grow: 1;
   min-width: 0;
@@ -166,10 +178,6 @@ button.row:hover {
 .row-price .unit {
   font-size: 12px;
   color: var(--muted);
-}
-.row-price .amount.pending {
-  color: var(--muted);
-  border-bottom: 1px dashed #6e747d;
 }
 
 /* Simple label/value rows inside a card (Detail: Next charge, Billing...) */
@@ -295,7 +303,6 @@ button.kv {
 .tag.neutral { background: var(--raised); border: 1px solid var(--border); color: var(--muted); }
 .tag.confirm { border: 1px solid var(--accent); color: var(--accent); }
 .tag.cancelled { background: var(--raised); color: var(--muted); text-decoration: line-through; }
-.tag.pending { border: 1px dashed #6e747d; color: var(--muted); }
 .tag.confirmed { background: var(--raised); border: 1px solid var(--border); color: var(--text); }
 .tag.count {
   color: var(--attention);

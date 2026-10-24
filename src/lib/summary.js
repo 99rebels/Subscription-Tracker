@@ -1,15 +1,15 @@
 // The numbers behind the Overview, Subscriptions, Detail and Savings screens.
-// Pure functions over stored subscriptions and weekly visit counts, so they can
-// be unit-tested in Node. They return numbers and lists; wording lives with the UI.
+// Pure functions over stored subscriptions, so they can be unit-tested in Node. They return numbers and lists; wording lives with the UI.
 //
 // Sums take an optional converter (fx.js) so totals add up in the display
 // currency; amounts on individual items stay in the subscription's own currency.
 
 import { monthlyPrice, cents } from "./money.js";
 import { IDENTITY } from "./fx.js";
-import { addCycle, addDays, addMonths, addMonthsToKey, daysBetween, toISODate, weekStart } from "./dates.js";
+import { addCycle, addMonthsToKey, daysBetween } from "./dates.js";
 
-export const STALE_AFTER_DAYS = 30;
+// After the user says they still use something ("Keep"), we don't ask again for this long.
+export const ASK_AGAIN_AFTER_DAYS = 90;
 
 const sum = (values) => cents(values.reduce((a, b) => a + b, 0));
 const byMonthly = (conv) => (a, b) => conv.monthly(b) - conv.monthly(a) || a.name.localeCompare(b.name);
@@ -33,23 +33,24 @@ export function budgetStatus(monthly, budget) {
   return { budget, share: monthly / budget, left: cents(budget - monthly), over: monthly > budget };
 }
 
-// Days since the last visit on this computer, or null if we've never seen one.
-export function daysSinceVisit(sub, today) {
-  if (!sub.lastUsed) return null;
-  return daysBetween(toISODate(new Date(sub.lastUsed)), today);
+// Days since the user last said they still use it, or null if they never have.
+export function daysSinceKept(sub, today) {
+  return sub.keptAt ? daysBetween(sub.keptAt, today) : null;
 }
 
-// Paid for, but not opened on this computer in 30+ days. Trials are covered by
-// their own reminder, and "I still use it on another device" opts out.
-export function isStale(sub, today) {
-  if (!isCurrent(sub) || sub.status === "trial" || sub.usedElsewhere || !sub.domains?.length) return false;
-  const days = daysSinceVisit(sub, today);
-  return days === null || days >= STALE_AFTER_DAYS;
+// Paid for, and the user hasn't told us lately that they still use it: never,
+// or not in ASK_AGAIN_AFTER_DAYS. Trials are covered by their own reminder.
+// (We can't see usage: phones, TVs and things like insurance never show up in
+// a browser, so we ask instead of guessing.)
+export function needsCheck(sub, today) {
+  if (!isCurrent(sub) || sub.status === "trial") return false;
+  const days = daysSinceKept(sub, today);
+  return days === null || days >= ASK_AGAIN_AFTER_DAYS;
 }
 
-// "Worth reviewing: cancel all three to save $335.64 a year · $27.97/mo"
+// "Still using these? 3 subscriptions, $335.64 a year · $27.97/mo"
 export function worthReviewing(subs, today, conv = IDENTITY) {
-  const items = subs.filter((s) => isStale(s, today)).sort(byMonthly(conv));
+  const items = subs.filter((s) => needsCheck(s, today)).sort(byMonthly(conv));
   const monthly = sum(items.map(conv.monthly));
   return { items, monthly, yearly: sum(items.map((s) => conv.monthly(s) * 12)) };
 }
@@ -209,75 +210,23 @@ export function priceHistory(sub) {
   };
 }
 
-// Visits per week, oldest first, for the usage chart. weekly = { "2026-10-19": 3, ... }
-export function weeklyVisits(weekly = {}, today, weeks = 12) {
-  const out = [];
-  const thisWeek = weekStart(today);
-  for (let i = weeks - 1; i >= 0; i--) {
-    const week = addDays(thisWeek, -7 * i);
-    out.push({ week, count: weekly[week] ?? 0 });
-  }
-  return out;
-}
-
 /**
- * "You've paid $23.97 over the last 3 months for 2 visits: $11.99 a visit."
- * Uses real charges when we have them; otherwise estimates from the price, but
- * only if the subscription is older than the window. Returns null if we can't say.
- */
-export function costPerVisit(sub, weekly = {}, today, months = 3) {
-  const from = addMonths(today, -months);
-  let paid;
-  let estimated = false;
-  if (sub.charges?.length) {
-    paid = sum(sub.charges.filter((c) => c.date > from && c.date <= today).map((c) => c.amount));
-  } else if (sub.startedAt && sub.startedAt <= from) {
-    paid = cents(monthlyPrice(sub) * months);
-    estimated = true;
-  } else {
-    return null;
-  }
-  const firstWeek = weekStart(from);
-  const visits = Object.entries(weekly)
-    .filter(([week]) => week >= firstWeek)
-    .reduce((a, [, count]) => a + count, 0);
-  return { months, paid, visits, perVisit: visits ? cents(paid / visits) : null, estimated };
-}
-
-/**
- * Adding a new subscription: "$85.95 → $101.95/mo, $1.95 over your $100 budget.
- * Paramount+ ($7.99, no visits in 64 days) would cover it." null unless it
- * takes the total over budget. cover is the cheapest not-visited subscription
- * that would bring it back under, if any.
- */
-export function budgetImpact(subs, addMonthly, budget, today, conv = IDENTITY) {
-  if (!budget || !(addMonthly > 0)) return null;
-  const before = totals(subs, conv).monthly;
-  const after = cents(before + addMonthly);
-  if (after <= budget) return null;
-  const over = cents(after - budget);
-  const cover = [...worthReviewing(subs, today, conv).items].sort((a, b) => conv.monthly(a) - conv.monthly(b)).find((s) => conv.monthly(s) >= over) ?? null;
-  return { before, after, over, budget, cover };
-}
-
-/**
- * Over budget: what to cut (product-plan §4). Only subscriptions not opened in
- * 30+ days are suggested, ranked by monthly cost × days since the last visit;
- * trials (they have their own reminder) and "I still use it on another device"
- * are skipped. null when not over budget.
+ * Over budget: what to cut (product-plan §4). Only subscriptions the user
+ * hasn't said they still use are suggested (needsCheck); trials have their own
+ * reminder. The cheapest one that covers the gap on its own wins; otherwise the
+ * biggest go first. null when not over budget.
  * Returns { over, picks, saved, under, enough }.
  */
 export function cutPlan(subs, budget, today, conv = IDENTITY) {
   const { monthly } = totals(subs, conv);
   if (!budget || monthly <= budget) return null;
   const over = cents(monthly - budget);
-  const ranked = subs
-    .filter((s) => isStale(s, today) && conv.monthly(s) > 0)
-    .map((s) => ({ sub: s, score: conv.monthly(s) * ((daysSinceVisit(s, today) ?? 365) + 1) }))
-    .sort((a, b) => b.score - a.score);
+  const candidates = subs.filter((s) => needsCheck(s, today) && conv.monthly(s) > 0).sort(byMonthly(conv));
+  const single = candidates.filter((s) => conv.monthly(s) >= over).at(-1);
+  const ranked = single ? [single] : candidates;
   const picks = [];
   let saved = 0;
-  for (const { sub } of ranked) {
+  for (const sub of ranked) {
     if (saved >= over) break;
     picks.push(sub);
     saved += conv.monthly(sub);

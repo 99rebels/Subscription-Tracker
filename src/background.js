@@ -1,10 +1,8 @@
-import { observeNavigation, forgetTab } from "./lib/detection.js";
-import { load, save, newId, updateBadge, dismissPending, migrateStorage, recordVisits, mergeWeeklyVisits } from "./lib/storage.js";
-import { findServiceByHost, guessName, hostMatches } from "./lib/services.js";
+import { load, save, updateBadge, migrateStorage } from "./lib/storage.js";
 import { today, daysBetween, nextRenewalOnOrAfter } from "./lib/dates.js";
 import { formatPrice } from "./lib/money.js";
-import { isStale } from "./lib/summary.js";
-import { usageFromHistory, VISIT_GAP_MS } from "./lib/usage.js";
+import { needsCheck } from "./lib/summary.js";
+import { keepSubscription } from "./lib/model.js";
 import { scanInbox } from "./lib/inbox-scan.js";
 import { GmailNeedsSignInError, BACKGROUND_PASS_WAITS } from "./lib/gmail.js";
 import { mergeReceipts, resyncReason } from "./lib/resync.js";
@@ -13,9 +11,11 @@ import { FX_URL, converter, otherCurrencies, parseRates, ratesAreStale } from ".
 
 const CHECK_ALARM = "renewal-check";
 const SYNC_ALARM = "gmail-sync";
-const SYNC_EVERY_MINUTES = 6 * 60;
+// New signups are found from their receipt email, so check often. Emails are
+// only downloaded once (mail-cache.js), so a check with nothing new is a
+// couple of cheap searches.
+const SYNC_EVERY_MINUTES = 60;
 const DAY_MS = 86_400_000;
-const DISMISS_FOR_MS = 30 * 24 * 60 * 60 * 1000;
 
 // ---------------------------------------------------------------------------
 // Startup: alarms can be cleared on browser restart, so always re-create them,
@@ -24,10 +24,9 @@ const DISMISS_FOR_MS = 30 * 24 * 60 * 60 * 1000;
 async function init() {
   await migrateStorage();
   await chrome.alarms.create(CHECK_ALARM, { periodInMinutes: 60, delayInMinutes: 1 });
-  await chrome.alarms.create(SYNC_ALARM, { periodInMinutes: SYNC_EVERY_MINUTES, delayInMinutes: 5 });
+  await chrome.alarms.create(SYNC_ALARM, { periodInMinutes: SYNC_EVERY_MINUTES, delayInMinutes: 1 });
   await updateBadge();
   await checkRenewals();
-  await backfillUsage();
   await refreshRates();
 }
 
@@ -54,122 +53,41 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 // ---------------------------------------------------------------------------
-// Navigation: checkout detection + "last used" tracking.
-
-async function onNavigate(details) {
-  if (details.frameId !== 0) return;
-
-  const merchant = await observeNavigation(details.tabId, details.url);
-  if (merchant) await handleDetection(merchant, details.url, details.tabId);
-
-  await recordUsage(details.url);
-}
-
-chrome.webNavigation.onCompleted.addListener(onNavigate);
-// Single-page apps (most checkout flows) change the URL without a full load.
-chrome.webNavigation.onHistoryStateUpdated.addListener(onNavigate);
-chrome.tabs.onRemoved.addListener(forgetTab);
-
-async function handleDetection(domain, url, tabId) {
-  const { subscriptions, pending, dismissed, settings } = await load("subscriptions", "pending", "dismissed", "settings");
-  if (!settings.detectCheckouts) return;
-
-  // Re-subscribing to something cancelled earlier is still worth asking about.
-  const current = subscriptions.filter((s) => s.status !== "cancelled");
-  if (current.some((s) => s.domains.some((d) => hostMatches(domain, d) || hostMatches(d, domain)))) return;
-  if (pending.some((p) => p.domain === domain)) return;
-  if (dismissed[domain] && Date.now() - dismissed[domain] < DISMISS_FOR_MS) return;
-
-  const service = await findServiceByHost(domain);
-  // tabId lets the popup read the price from this tab (activeTab) when the user clicks our icon.
-  const item = { id: newId(), domain, name: service?.name ?? guessName(domain), url, tabId, detectedAt: Date.now() };
-  await save({ pending: [...pending, item] });
-  await updateBadge();
-
-  chrome.notifications.create(`detect:${item.id}`, {
-    type: "basic",
-    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
-    title: `Did you just subscribe to ${item.name}?`,
-    message: "Add it to Subscription Check to track the cost and get a reminder before you're charged.",
-    buttons: [{ title: "Add it" }, { title: "Not a subscription" }],
-    requireInteraction: true,
-  });
-}
-
-async function recordUsage(urlString) {
-  let hostname;
-  try {
-    hostname = new URL(urlString).hostname;
-  } catch {
-    return;
-  }
-  const { subscriptions, settings } = await load("subscriptions", "settings");
-  if (!settings.trackVisits) return;
-  const now = Date.now();
-  // Page loads within VISIT_GAP_MS of the last one are the same visit, so
-  // lastUsed can lag by up to that long. Good enough for "visited today".
-  const visited = subscriptions.filter(
-    (s) =>
-      s.status !== "cancelled" &&
-      s.domains.some((d) => hostMatches(hostname, d)) &&
-      (!s.lastUsed || now - s.lastUsed >= VISIT_GAP_MS),
-  );
-  if (!visited.length) return;
-  for (const sub of visited) sub.lastUsed = now;
-  await save({ subscriptions });
-  await recordVisits(visited.map((s) => s.id), now);
-}
-
-// ---------------------------------------------------------------------------
-// Usage backfill: whichever page adds a subscription, fill in its visits from
-// Chrome history (~90 days) once.
-
-let backfilling = false;
-let backfillAgain = false;
+// Whichever page changes something: a reminder due now (e.g. the next charge
+// was just edited to tomorrow) goes out straight away instead of within the
+// hour, and the badge follows the Review questions.
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.subscriptions) backfillUsage();
-  if (area === "local" && (changes.subscriptions || changes.settings)) refreshRates();
+  if (area !== "local") return;
+  if (changes.subscriptions || changes.settings) checkRenewals();
+  if (changes.review) updateBadge();
+  if (changes.subscriptions || changes.settings) refreshRates();
 });
-
-async function backfillUsage() {
-  if (backfilling) {
-    backfillAgain = true;
-    return;
-  }
-  backfilling = true;
-  try {
-    do {
-      backfillAgain = false;
-      const { subscriptions, settings } = await load("subscriptions", "settings");
-      if (!settings.trackVisits) return;
-      const todo = subscriptions.filter((s) => !s.usageBackfilled && s.domains?.length);
-      if (!todo.length) continue;
-
-      const lastUsed = new Map();
-      for (const sub of todo) {
-        const usage = await usageFromHistory(sub.domains);
-        await mergeWeeklyVisits(sub.id, usage.weekly);
-        lastUsed.set(sub.id, usage.lastUsed);
-      }
-      // Re-read: the list may have changed while history was being read.
-      const { subscriptions: fresh } = await load("subscriptions");
-      for (const sub of fresh) {
-        if (!lastUsed.has(sub.id)) continue;
-        sub.usageBackfilled = true;
-        sub.lastUsed = Math.max(sub.lastUsed ?? 0, lastUsed.get(sub.id) ?? 0) || null;
-      }
-      await save({ subscriptions: fresh });
-    } while (backfillAgain);
-  } finally {
-    backfilling = false;
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Renewal reminders.
 
+// One check at a time; a change that lands during a check runs it again after.
+let checking = false;
+let checkAgain = false;
+
 async function checkRenewals() {
+  if (checking) {
+    checkAgain = true;
+    return;
+  }
+  checking = true;
+  try {
+    do {
+      checkAgain = false;
+      await checkRenewalsOnce();
+    } while (checkAgain);
+  } finally {
+    checking = false;
+  }
+}
+
+async function checkRenewalsOnce() {
   const { subscriptions, settings, stats } = await load("subscriptions", "settings", "stats");
   const now = today();
   let changed = false;
@@ -219,21 +137,27 @@ function notifyRenewal(sub, daysLeft) {
     iconUrl: chrome.runtime.getURL("icons/icon128.png"),
     title,
     message,
-    buttons: sub.cancelUrl ? [{ title: "Cancel / manage" }, { title: "Keep it" }] : [{ title: "Keep it" }],
+    buttons: renewalButtons(sub).map((b) => ({ title: b.title })),
     requireInteraction: true,
   });
 }
 
-// Monthly check-in: "November: $85.95 this month · 6 charges · 3 worth reviewing".
+// "Keep it" also answers "Still using it?" (summary.js needsCheck).
+function renewalButtons(sub) {
+  const keep = { title: "Keep it", action: "keep" };
+  return sub.cancelUrl ? [{ title: "Cancel / manage", action: "cancel" }, keep] : [keep];
+}
+
+// Monthly check-in: "November: $85.95 a month · 6 charges this month · 3 to check".
 function notifyCheckIn(subscriptions, now, conv, currency) {
   const current = subscriptions.filter((s) => s.status !== "cancelled");
   const monthEnd = `${now.slice(0, 7)}-31`;
   const charges = current.filter((s) => s.nextRenewal && s.nextRenewal <= monthEnd && s.status !== "trial").length;
   const monthly = current.reduce((a, s) => a + conv.monthly(s), 0);
-  const stale = current.filter((s) => isStale(s, now)).length;
+  const toCheck = current.filter((s) => needsCheck(s, now)).length;
   const month = new Date(`${now}T12:00:00`).toLocaleDateString(undefined, { month: "long" });
   const parts = [`${formatPrice({ price: monthly, currency })} a month`, `${charges} charge${charges === 1 ? "" : "s"} this month`];
-  if (stale) parts.push(`${stale} not opened in 30+ days`);
+  if (toCheck) parts.push(`${toCheck} to check`);
   chrome.notifications.create("checkin:overview", {
     type: "basic",
     iconUrl: chrome.runtime.getURL("icons/icon128.png"),
@@ -259,37 +183,27 @@ async function openFullView(hash = "#overview") {
   }
 }
 
-// A detection is confirmed in the popup, where clicking our icon also lets us
-// read the price from the page.
-async function openDetection() {
-  try {
-    await chrome.action.openPopup();
-  } catch {
-    await openFullView("#review");
-  }
-}
-
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
   const [kind, id] = notificationId.split(":");
   chrome.notifications.clear(notificationId);
 
-  if (kind === "detect") {
-    if (buttonIndex === 0) await openDetection();
-    else await dismissPending(id);
-  }
-
-  if (kind === "renew" && buttonIndex === 0) {
-    const { subscriptions } = await load("subscriptions");
-    const sub = subscriptions.find((s) => s.id === id);
-    if (sub?.cancelUrl) await chrome.tabs.create({ url: sub.cancelUrl });
+  if (kind !== "renew") return;
+  const { subscriptions } = await load("subscriptions");
+  const i = subscriptions.findIndex((s) => s.id === id);
+  if (i === -1) return;
+  const action = renewalButtons(subscriptions[i])[buttonIndex]?.action;
+  if (action === "cancel") await chrome.tabs.create({ url: subscriptions[i].cancelUrl });
+  if (action === "keep") {
+    subscriptions[i] = keepSubscription(subscriptions[i], today());
+    await save({ subscriptions });
   }
 });
 
 chrome.notifications.onClicked.addListener(async (notificationId) => {
   chrome.notifications.clear(notificationId);
   const [kind, id] = notificationId.split(":");
-  if (kind === "detect") await openDetection();
-  else if (kind === "checkin") await openFullView("#overview");
+  if (kind === "checkin") await openFullView("#overview");
+  else if (kind === "new") await openFullView("#review");
   else await openFullView(`#sub/${id}`);
 });
 
@@ -352,9 +266,21 @@ async function syncGmail() {
     }
     await updateBadge();
     for (const e of events) notifyResync(e, subscriptions.find((s) => s.id === e.subId));
+    for (const q of questions) if (q.kind === "new") notifyNew(q);
   } finally {
     syncing = false;
   }
+}
+
+// A receipt from something we don't track yet: ask in Review (never added silently).
+function notifyNew(q) {
+  const reason = resyncReason(q);
+  chrome.notifications.create(`new:${q.item.key}`, {
+    type: "basic",
+    iconUrl: chrome.runtime.getURL("icons/icon128.png"),
+    title: reason.title,
+    message: reason.detail,
+  });
 }
 
 function notifyResync(event, sub) {

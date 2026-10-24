@@ -43,7 +43,7 @@ const actions = {
 };
 
 async function refresh() {
-  const data = await load("subscriptions", "visits", "settings", "pending", "review", "sorted", "gmail", "fx", "installedAt", "stats");
+  const data = await load("subscriptions", "settings", "review", "sorted", "gmail", "fx", "installedAt", "stats");
   // conv adds totals up in the display currency (fx.js); single prices keep their own.
   state = { ...data, today: today(), conv: converter(data.settings.currency, data.fx) };
   render();
@@ -87,7 +87,7 @@ function render() {
   const scrollTop = key === lastRoute && previous ? previous.scrollTop : 0;
   lastRoute = key;
 
-  const reviewCount = state.pending.length + state.review.length;
+  const reviewCount = state.review.length;
   let page;
   switch (r.view) {
     case "subscriptions":

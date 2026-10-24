@@ -1,7 +1,6 @@
 <!doctype html>
 <!-- Preview the popup with the designs' sample account (see preview.html for how to serve).
      popup-preview.html          Home
-     popup-preview.html?detected Detected signup (price read from a fake checkout page)
      popup-preview.html?empty    First run -->
 <html lang="en">
   <head>
@@ -18,8 +17,6 @@
       import { sampleData } from "./sample-data.js";
       const params = new URLSearchParams(location.search);
       const data = params.has("empty") ? { settings: {} } : sampleData();
-      if (!params.has("detected")) data.pending = [];
-      else data.pending[0] = { ...data.pending[0], tabId: 1, detectedAt: Date.now() };
       window.close = () => {};
       await chrome.storage.local.set(data);
       await import("../src/popup/popup.js");

@@ -1,11 +1,11 @@
 // Side panel · Subscription detail (docs/designs/PanelDetail.dc.html)
 import { h } from "../ui/dom.js";
-import { icon, logoTile, confirmedTag, tag, isPricePending } from "../ui/components.js";
+import { icon, logoTile, confirmedTag, tag } from "../ui/components.js";
 import * as t from "../ui/text.js";
-import { daysSinceVisit, weeklyVisits, costPerVisit, priceHistory, savings, STALE_AFTER_DAYS } from "../lib/summary.js";
-import { cancelSubscription, undoCancel } from "../lib/model.js";
+import { priceHistory, savings } from "../lib/summary.js";
+import { cancelSubscription, undoCancel, keepSubscription } from "../lib/model.js";
 import { cancelRoute } from "../lib/cancel.js";
-import { daysBetween, toISODate } from "../lib/dates.js";
+import { daysBetween } from "../lib/dates.js";
 import { monthlyPrice } from "../lib/money.js";
 import { buildICS, googleCalendarUrl } from "../lib/calendar.js";
 
@@ -44,7 +44,7 @@ export function renderDetail(state, actions, id) {
       { class: "content detail" },
       top(sub),
       cancelled ? cancelledCard(sub, state, actions) : null,
-      usageCard(sub, state),
+      keepCard(sub, state, actions),
       cancelled ? null : scheduleCard(sub, state, actions),
       priceHistorySection(sub, actions),
       cancelled ? null : cancelSection(sub, state, actions),
@@ -72,7 +72,6 @@ function top(sub) {
 
   let badge = null;
   if (sub.status === "cancelled") badge = tag("cancelled", "Cancelled");
-  else if (isPricePending(sub)) badge = tag("pending", "Price pending");
   else if (sub.confirmedByReceipt) badge = confirmedTag();
 
   return h(
@@ -85,7 +84,6 @@ function top(sub) {
       h("div", {}, h("div", { style: "display: flex; align-items: baseline; gap: 4px" }, ...figure), h("div", { class: "caption" }, caption)),
       badge,
     ),
-    isPricePending(sub) ? h("div", { class: "caption" }, "Price read from the checkout page. We'll double-check it against your receipt.") : null,
   );
 }
 
@@ -108,58 +106,23 @@ function cancelledCard(sub, state, actions) {
   );
 }
 
-function usageCard(sub, state) {
-  const { today, settings } = state;
-  const head = h("div", { class: "section-head" }, h("h2", {}, "Usage on this computer"), h("span", { class: "caption" }, "Last 12 weeks"));
-
-  if (!sub.domains?.length) {
-    return h("section", { class: "card card-pad" }, head, h("div", { class: "caption" }, "Add the website to see when you last used it. ", h("a", { href: `#edit/${sub.id}`, style: "color: var(--accent)" }, "Add website")));
-  }
-  if (!settings.trackVisits) {
-    return h("section", { class: "card card-pad" }, head, h("div", { class: "caption" }, "Visit tracking is off in Settings."));
-  }
-
-  const days = daysSinceVisit(sub, today);
-  let big;
-  let caption;
-  if (days === null) {
-    big = h("span", { class: "usage-days attention" }, "No visits");
-    caption = "on this computer";
-  } else if (days <= 1) {
-    big = h("span", { class: "usage-days" }, days <= 0 ? "Today" : "Yesterday");
-    caption = "was your last visit";
-  } else {
-    big = h("span", { class: `usage-days${days >= STALE_AFTER_DAYS ? " attention" : ""}` }, t.plural(days, "day"));
-    caption = `since your last visit (${t.shortDate(toISODate(new Date(sub.lastUsed)))})`;
-  }
-
-  const weekly = state.visits[sub.id] ?? {};
-  const weeks = weeklyVisits(weekly, today);
-  const max = Math.max(1, ...weeks.map((w) => w.count));
-  const bars = weeks.map((w) => {
-    const bar = h("div", { class: w.count ? "" : "none", title: `${t.shortDate(w.week)}: ${t.plural(w.count, "visit")}` });
-    if (w.count) bar.style.height = `${Math.max(8, (w.count / max) * 100)}%`;
-    return bar;
-  });
-  const total = weeks.reduce((a, w) => a + w.count, 0);
-
-  const cpv = sub.status === "cancelled" ? null : costPerVisit(sub, weekly, today);
-  let cpvLine = null;
-  if (cpv && cpv.paid > 0) {
-    const paid = `${cpv.estimated ? "about " : ""}${t.money(cpv.paid, sub.currency)}`;
-    cpvLine = cpv.visits
-      ? h("div", { class: "caption split-top" }, `You've paid ${paid} over the last 3 months for ${t.plural(cpv.visits, "visit")}: `, h("span", { class: "strong" }, `${t.money(cpv.perVisit, sub.currency)} a visit`), ".")
-      : h("div", { class: "caption split-top" }, `You've paid ${paid} over the last 3 months and haven't visited on this computer.`);
-  }
-
+// "Still using it?" We can't see usage (phones, TVs, things you'd never
+// visit), so we ask, and don't ask again for a few months after a yes.
+function keepCard(sub, state, actions) {
+  const k = t.keepStatus(sub, state.today);
+  if (!k?.ask || sub.cancelStartedAt) return null;
+  const yearly = t.money(monthlyPrice(sub) * 12, sub.currency);
   return h(
     "section",
-    { class: "card card-pad" },
-    head,
-    h("div", { style: "display: flex; align-items: baseline; gap: 6px" }, big, h("span", { class: "caption" }, caption)),
-    h("div", { class: "usage-bars", role: "img", "aria-label": `${t.plural(total, "visit")} in the last 12 weeks` }, ...bars),
-    h("div", { class: "usage-axis" }, h("span", {}, "12 weeks ago"), h("span", {}, "This week")),
-    cpvLine,
+    { class: "card card-pad", style: "gap: 10px" },
+    h("h2", { style: "font-size: 15px; font-weight: 600" }, "Still using it?"),
+    h("div", { class: "caption", style: "line-height: 1.45" }, `${sub.name} costs you ${yearly} a year. `, k.detail ?? "Tell us and we'll stop asking for a few months."),
+    h(
+      "div",
+      { class: "btn-row" },
+      h("button", { class: "btn primary md", onclick: () => actions.save(keepSubscription(sub, state.today)) }, "Yes, keep it"),
+      h("button", { class: "btn md", onclick: () => document.getElementById("cancel")?.scrollIntoView({ behavior: "smooth", block: "start" }) }, "No, show me how to cancel"),
+    ),
   );
 }
 
@@ -183,6 +146,9 @@ function scheduleCard(sub, state, actions) {
   }
 
   rows.push(h("div", { class: "kv" }, h("span", {}, "Billing"), h("span", {}, t.billingText(sub))));
+
+  const k = t.keepStatus(sub, today);
+  if (k && !k.ask) rows.push(h("div", { class: "kv" }, h("span", {}, "Still using it"), h("span", { title: k.detail }, `You said yes, ${t.shortDate(sub.keptAt)}`)));
 
   if (sub.nextRenewal) {
     const open = ui.calendarOpen === sub.id;
@@ -342,18 +308,5 @@ function cancelSection(sub, state, actions) {
     );
   }
 
-  if (sub.status !== "trial") {
-    parts.push(
-      sub.usedElsewhere
-        ? h(
-            "div",
-            { class: "center-note" },
-            "You use this on another device, so we won't suggest cutting it. ",
-            h("button", { class: "btn ghost sm", style: "display: inline-flex; padding: 0 4px; height: auto; color: var(--accent)", onclick: () => actions.save({ ...sub, usedElsewhere: false }) }, "Undo"),
-          )
-        : h("button", { class: "btn ghost", style: "height: 36px", onclick: () => actions.save({ ...sub, usedElsewhere: true }) }, "I still use it on another device"),
-    );
-  }
-
-  return h("section", { class: "section", style: "gap: 10px; padding-top: 4px" }, ...parts);
+  return h("section", { class: "section", id: "cancel", style: "gap: 10px; padding-top: 4px; scroll-margin-top: 12px" }, ...parts);
 }

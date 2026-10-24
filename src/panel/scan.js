@@ -11,8 +11,6 @@ import { scanInbox } from "../lib/inbox-scan.js";
 import { isConfigured } from "../lib/gmail.js";
 import { analyseInbox } from "../lib/receipts.js";
 import { loadServices } from "../lib/services.js";
-import { lastVisitFromHistory } from "../lib/usage.js";
-import { isStale } from "../lib/summary.js";
 import { sampleInbox } from "../lib/sample-inbox.js";
 
 // One scan at a time; survives re-renders while the panel stays open.
@@ -77,7 +75,7 @@ function timeLeft(seconds) {
 function progressLabel(p) {
   if (p.phase === "connect") return "Connecting to Gmail…";
   if (p.phase === "search") return "Searching your receipts…";
-  if (p.phase === "history") return "Checking when you last visited…";
+  if (p.phase === "sort") return "Sorting what we found…";
   if (p.phase === "retry") return `Gmail asked us to slow down. Trying the last ${t.plural(p.total - p.done, "email")} again…`;
   return `Reading ${p.done} of ${p.total} emails${p.secondsLeft != null && p.done < p.total ? ` · ${timeLeft(p.secondsLeft)}` : "…"}`;
 }
@@ -124,7 +122,7 @@ function updateFound(candidates) {
 
 function progressShare(p) {
   if ((p.phase === "read" || p.phase === "retry") && p.total) return p.done / p.total;
-  return p.phase === "history" ? 1 : 0.03;
+  return p.phase === "sort" ? 1 : 0.03;
 }
 
 function progressView() {
@@ -215,14 +213,9 @@ async function runScan(state, actions) {
     } else {
       ({ analysis, scanned, unreadIds } = await scanInbox({ onProgress: (p) => updateProgress(p, actions), onFound: updateFound }));
     }
-    updateProgress({ phase: "history" }, actions);
+    updateProgress({ phase: "sort" }, actions);
 
-    const { subscriptions, settings } = await load("subscriptions", "settings");
-    if (settings.trackVisits) {
-      for (const c of [...analysis.candidates, ...analysis.questions]) {
-        c.lastUsed = c.domains?.length ? await lastVisitFromHistory(c.domains) : null;
-      }
-    }
+    const { subscriptions } = await load("subscriptions");
     const groups = classifyScan(analysis, { today: state.today, subscriptions });
     scan = {
       phase: "results",
@@ -245,16 +238,15 @@ async function runScan(state, actions) {
 // ---------------------------------------------------------------------------
 // Results
 
-function rowSub(c, today) {
-  if (c.isTrial) return { text: c.nextRenewal ? `Trial ends ${t.shortDate(c.nextRenewal)}${Number(c.price) > 0 ? `, then ${t.pricePerCycle(c)}` : ""}` : "Free trial" };
+function rowSub(c) {
+  if (c.isTrial) return c.nextRenewal ? `Trial ends ${t.shortDate(c.nextRenewal)}${Number(c.price) > 0 ? `, then ${t.pricePerCycle(c)}` : ""}` : "Free trial";
   const yearly = c.cycle === "yearly" ? "Yearly · " : "";
-  if (isStale({ ...c, status: "active" }, today)) return { text: `${yearly}${t.usage(c, today).text}`, stale: true };
   const how = c.processor ? `Billed via ${c.processor}` : `${t.plural(c.charges.length, "receipt")}`;
-  return { text: c.nextRenewal ? `${how} · renews ${t.shortDate(c.nextRenewal)}` : how };
+  return `${yearly}${c.nextRenewal ? `${how} · renews ${t.shortDate(c.nextRenewal)}` : how}`;
 }
 
 function resultsView(state, actions) {
-  const { today, settings } = state;
+  const { settings } = state;
   const currency = settings.currency;
   const rerender = actions.rerender;
 
@@ -264,8 +256,6 @@ function resultsView(state, actions) {
   const monthly = asSubs.reduce((a, s) => a + state.conv.monthly(s), 0);
   const unanswered = scan.confirm.filter((c) => !c.answer).length;
   const addCount = scan.paying.filter((p) => p.ticked).length + scan.confirm.filter((c) => c.answer === "yes").length + scan.notAdded.filter((n) => n.added).length;
-  const stale = asSubs.filter((s) => isStale(s, today));
-  const staleMonthly = stale.reduce((a, s) => a + state.conv.monthly(s), 0);
 
   const summary = [`${t.moneyWhole(monthly * 12, currency)} a year across ${t.plural(asSubs.length, "subscription")}`];
   if (unanswered) summary.push(`${unanswered} to confirm`);
@@ -284,15 +274,6 @@ function resultsView(state, actions) {
       : null,
   );
 
-  const staleNote = stale.length
-    ? h(
-        "section",
-        { style: "padding: 12px 14px; border-radius: 12px; background: var(--attention-bg); display: flex; flex-direction: column; gap: 2px" },
-        h("div", { class: "attention", style: "font-size: 13px; font-weight: 600" }, `${t.money(staleMonthly, currency)}/mo on things you don't open`),
-        h("div", { class: "caption", style: "line-height: 1.45" }, `${t.joinAnd(stale.map((s) => s.name))} ${stale.length === 1 ? "hasn't" : "haven't"} been opened on this computer in 30+ days.`),
-      )
-    : null;
-
   const payingRows = scan.paying.map((p) => {
     const c = p.item;
     const box = h("input", { type: "checkbox", checked: p.ticked, style: "width: 16px; height: 16px; margin: 0; accent-color: var(--accent); flex-shrink: 0", "aria-label": `Add ${c.name}` });
@@ -300,14 +281,13 @@ function resultsView(state, actions) {
       p.ticked = box.checked;
       rerender();
     });
-    const sub = rowSub(c, today);
     const price = c.isTrial ? h("span", { class: "num muted", style: "font-size: 13px; font-weight: 600" }, t.money(0, c.currency)) : h("span", { class: "num strong", style: "font-size: 13px" }, t.money(Number(c.price) || 0, c.currency), c.cycle === "yearly" ? h("span", { class: "muted", style: "font-weight: 400" }, "/yr") : null);
     return h(
       "label",
       { class: "row compact", style: "cursor: pointer" },
       box,
       logoTile(c, { size: 28 }),
-      h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, c.name), c.isTrial ? h("span", { class: "attention", style: "font-size: 11px; font-weight: 600" }, "Trial") : null), h("div", { class: `row-sub${sub.stale ? " attention" : ""}` }, t.capitalize(sub.text))),
+      h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, c.name), c.isTrial ? h("span", { class: "attention", style: "font-size: 11px; font-weight: 600" }, "Trial") : null), h("div", { class: "row-sub" }, rowSub(c))),
       price,
     );
   });
@@ -345,11 +325,10 @@ function resultsView(state, actions) {
       "main",
       { class: "content", style: "gap: 22px; padding-top: 20px" },
       head,
-      staleNote,
       scan.paying.length ? h("section", { class: "section" }, h("div", { class: "section-head" }, h("h2", {}, `You're paying for · ${scan.paying.length}`), h("span", { class: "caption" }, "Untick anything that's wrong")), h("div", { class: "card" }, ...payingRows)) : null,
       scan.confirm.length ? h("section", { class: "section" }, h("div", { class: "section-head" }, h("h2", {}, `Please confirm · ${scan.confirm.length}`)), h("div", { class: "card" }, ...confirmRows)) : null,
       scan.notAdded.length ? h("section", { class: "section" }, h("div", { class: "section-head" }, h("h2", { class: "muted" }, `Not added · ${scan.notAdded.length}`)), h("div", { class: "cancelled-list" }, ...notAddedRows)) : null,
-      !scan.paying.length && !scan.confirm.length && !scan.notAdded.length ? h("div", { class: "empty" }, "We didn't find any subscription receipts. We'll keep an eye out at checkout instead.") : null,
+      !scan.paying.length && !scan.confirm.length && !scan.notAdded.length ? h("div", { class: "empty" }, "We didn't find any subscription receipts. We'll keep checking as new emails arrive.") : null,
       h("div", { class: "caption", style: "display: flex; gap: 8px; line-height: 1.5" }, icon("lock", { size: 13 }), "Read in your browser. None of your email left this computer."),
     ),
     h(

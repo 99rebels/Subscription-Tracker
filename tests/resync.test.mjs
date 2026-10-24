@@ -8,22 +8,15 @@ const sub = (f) => normalizeSubscription({ cycle: "monthly", currency: "USD", ..
 const candidate = (f) => ({ key: f.name, status: "active", cycle: "monthly", cycleConfident: true, domains: [], charges: [], ...f });
 const charge = (date, amount) => ({ date, amount, currency: "USD" });
 
-test("a receipt confirms a checkout price", () => {
-  const figma = sub({ id: "f", name: "Figma", domains: ["figma.com"], price: 16, priceSource: "checkout", confirmedByReceipt: false, nextRenewal: "2026-11-20", anchorDay: 20 });
-  const out = mergeReceipts([figma], { candidates: [candidate({ name: "Figma", domains: ["figma.com"], charges: [charge("2026-10-20", 16)] })] }, { today: TODAY });
+test("a receipt fills in a price typed by hand", () => {
+  const figma = sub({ id: "f", name: "Figma", domains: ["figma.com"], price: 16, priceSource: "manual", nextRenewal: "2026-11-20", anchorDay: 20 });
+  const out = mergeReceipts([figma], { candidates: [candidate({ name: "Figma", domains: ["figma.com"], charges: [charge("2026-10-20", 19.2)] })] }, { today: TODAY });
   const s = out.subscriptions[0];
-  assert.deepEqual(out.events, [{ type: "confirmed", subId: "f" }]);
+  assert.deepEqual(out.events, []);
+  assert.equal(s.price, 19.2);
   assert.equal(s.confirmedByReceipt, true);
   assert.equal(s.priceSource, "receipt");
   assert.equal(s.nextRenewal, "2026-11-20");
-  assert.equal(s.charges.length, 1);
-});
-
-test("a different receipt amount corrects a checkout price", () => {
-  const figma = sub({ id: "f", name: "Figma", domains: ["figma.com"], price: 16, priceSource: "checkout", nextRenewal: "2026-11-20" });
-  const out = mergeReceipts([figma], { candidates: [candidate({ name: "Figma", domains: ["figma.com"], charges: [charge("2026-10-20", 19.2)] })] }, { today: TODAY });
-  assert.deepEqual(out.events, [{ type: "price_corrected", subId: "f", from: 16, to: 19.2 }]);
-  assert.equal(out.subscriptions[0].price, 19.2);
 });
 
 test("a higher amount than last time is a price rise; duplicates are ignored", () => {

@@ -1,7 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { normalizeSubscription, cancelSubscription, undoCancel, migrate, SCHEMA_VERSION } from "../src/lib/model.js";
-import { weeklyCountsFromTimestamps, addVisit, VISIT_GAP_MS } from "../src/lib/usage.js";
+import { normalizeSubscription, cancelSubscription, undoCancel, keepSubscription, migrate, SCHEMA_VERSION } from "../src/lib/model.js";
 import { weekStart, addMonths, addMonthsToKey, addDays } from "../src/lib/dates.js";
 
 const services = [
@@ -59,16 +58,26 @@ test("migrate v1 storage", () => {
   assert.equal(migrate(out).subscriptions[0], out.subscriptions[0]);
 });
 
-test("visits: loads within 30 minutes are one visit, bucketed by Monday", () => {
-  const t = new Date("2026-10-21T09:00:00").getTime(); // Wednesday
-  const counts = weeklyCountsFromTimestamps([t, t + 60_000, t + VISIT_GAP_MS + 60_000, t - 7 * 86_400_000]);
-  assert.deepEqual(counts, { "2026-10-19": 2, "2026-10-12": 1 });
+test("migrate v2: 'I still use it on another device' becomes kept; checkout detections go", () => {
+  const v2 = {
+    schemaVersion: 2,
+    subscriptions: [
+      { id: "1", name: "Netflix", price: 1, usedElsewhere: true, lastUsed: 123 },
+      { id: "2", name: "Figma", price: 16, source: "detected", priceSource: "checkout" },
+    ],
+    pending: [{ id: "p1", name: "Canva", domain: "canva.com" }],
+  };
+  const out = migrate(v2, { services, today: "2026-10-24" });
+  assert.equal(out.subscriptions[0].keptAt, "2026-10-24");
+  assert.equal(out.subscriptions[1].keptAt, null);
+  assert.equal(out.subscriptions[1].priceSource, "manual"); // no more checkout prices
+  assert.deepEqual(out.pending, []);
 });
 
-test("addVisit increments this week and prunes very old weeks", () => {
-  const now = new Date("2026-10-21T09:00:00").getTime();
-  const out = addVisit({ "2026-10-19": 1, "2020-01-06": 4 }, now);
-  assert.deepEqual(out, { "2026-10-19": 2 });
+test("keep sets the date the user said they still use it", () => {
+  const sub = normalizeSubscription({ id: "1", name: "Netflix", price: 1 });
+  assert.equal(sub.keptAt, null);
+  assert.equal(keepSubscription(sub, "2026-10-24").keptAt, "2026-10-24");
 });
 
 test("date helpers", () => {

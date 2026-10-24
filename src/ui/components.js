@@ -159,19 +159,17 @@ export function sectionHead(title, aside, { count } = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Subscription row (Components: normal · not visited lately · trial · yearly ·
-// no visits on this computer · price pending)
+// Subscription row (Components: normal · still using it? · trial · yearly)
 
-export function usageSpan(sub, today) {
-  const u = t.usage(sub, today);
-  return u.stale ? h("span", { class: "attention", style: "font-weight: 500" }, u.text) : u.text;
+// The amber "still using it?" after a subscription's renewal, or null once the
+// user has said they still use it.
+export function askSpan(sub, today) {
+  const k = t.keepStatus(sub, today);
+  return k?.ask ? h("span", { class: "attention", style: "font-weight: 500" }, k.text) : null;
 }
-
-export const isPricePending = (sub) => sub.priceSource === "checkout" && !sub.confirmedByReceipt;
 
 export function subscriptionRow(sub, today, { href = `#sub/${sub.id}`, compact = false } = {}) {
   const trial = sub.status === "trial";
-  const pending = isPricePending(sub);
   const currency = sub.currency;
 
   const title = h(
@@ -182,11 +180,8 @@ export function subscriptionRow(sub, today, { href = `#sub/${sub.id}`, compact =
     !trial && sub.cycle === "yearly" ? tag("neutral", "Yearly") : null,
   );
 
-  let subline;
-  if (trial) subline = t.renewalText(sub);
-  else if (pending) subline = "Price from checkout page · confirming with receipt";
-  else if (!sub.domains?.length) subline = t.renewalText(sub);
-  else subline = [t.renewalText(sub), " · ", usageSpan(sub, today)];
+  const ask = trial ? null : askSpan(sub, today);
+  const subline = ask ? [t.renewalText(sub), " · ", ask] : t.renewalText(sub);
 
   let right;
   if (trial && sub.nextRenewal) {
@@ -196,7 +191,7 @@ export function subscriptionRow(sub, today, { href = `#sub/${sub.id}`, compact =
     right = h(
       "div",
       { class: "row-price" },
-      h("div", { class: `amount${pending ? " pending" : ""}` }, t.money(amount, currency)),
+      h("div", { class: "amount" }, t.money(amount, currency)),
       h("div", { class: "unit" }, sub.cycle === "yearly" ? t.monthlyShare(sub) : t.cycleUnit(sub.cycle)),
     );
   }

@@ -431,38 +431,6 @@ body {
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
-.usage-days {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.usage-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 44px;
-}
-.usage-bars > div {
-  flex: 1 1 0;
-  border-radius: 3px;
-  background: var(--dim);
-}
-.usage-bars > .none {
-  height: 4px;
-  border-radius: 2px;
-  background: var(--border);
-}
-.usage-axis {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--faint);
-  margin-top: -6px;
-}
-.split-top {
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}
 .steps {
   margin: 0;
   padding-left: 20px;

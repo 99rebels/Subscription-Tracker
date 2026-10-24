@@ -121,7 +121,6 @@ export function candidateToSubscription(item, { today, answer = "yes", kind = nu
     currency: item.currency ?? "USD",
     charges: item.charges ?? [],
     billedVia: item.billedVia ?? null,
-    lastUsed: item.lastUsed ?? null,
     notifiedFor: null,
   };
 

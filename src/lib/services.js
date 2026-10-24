@@ -13,11 +13,6 @@ export function hostMatches(hostname, domain) {
   return hostname === domain || hostname.endsWith(`.${domain}`);
 }
 
-export async function findServiceByHost(hostname) {
-  const services = await loadServices();
-  return services.find((s) => s.domains.some((d) => hostMatches(hostname, d)));
-}
-
 export async function findServiceByName(name) {
   const services = await loadServices();
   const lower = name.trim().toLowerCase();

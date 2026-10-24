@@ -5,7 +5,7 @@
 import { migrate, SCHEMA_VERSION } from "./model.js";
 import { monthlyCost } from "./money.js";
 
-const BACKUP_KEYS = ["subscriptions", "visits", "settings", "review", "sorted", "stats", "installedAt", "dismissed"];
+const BACKUP_KEYS = ["subscriptions", "settings", "review", "sorted", "stats", "installedAt"];
 
 function csvCell(value) {
   const s = value == null ? "" : String(value);
@@ -13,7 +13,7 @@ function csvCell(value) {
 }
 
 export function toCSV(subs) {
-  const header = ["Name", "Plan", "Status", "Price", "Currency", "Billing", "Monthly cost", "Next charge", "Category", "Website", "Last visit", "Started", "Cancelled"];
+  const header = ["Name", "Plan", "Status", "Price", "Currency", "Billing", "Monthly cost", "Next charge", "Category", "Website", "Still using (said on)", "Started", "Cancelled"];
   const rows = subs.map((s) => [
     s.name,
     s.plan,
@@ -25,7 +25,7 @@ export function toCSV(subs) {
     s.status === "cancelled" ? "" : s.nextRenewal,
     s.category,
     s.domains?.[0] ?? "",
-    s.lastUsed ? new Date(s.lastUsed).toISOString().slice(0, 10) : "",
+    s.keptAt ?? "",
     s.startedAt,
     s.cancelledAt ?? "",
   ]);

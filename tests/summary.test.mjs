@@ -11,32 +11,28 @@ import {
   categories,
   savings,
   priceHistory,
-  weeklyVisits,
-  costPerVisit,
-  isStale,
-  budgetImpact,
+  needsCheck,
 } from "../src/lib/summary.js";
 import { cancelSubscription, normalizeSubscription } from "../src/lib/model.js";
 
 // The sample account on the design boards (docs/designs), as of Oct 22, 2026.
 const TODAY = "2026-10-22";
-const at = (iso) => new Date(`${iso}T12:00:00`).getTime();
 const sub = (fields) =>
   normalizeSubscription({ id: fields.name, cycle: "monthly", currency: "USD", domains: [`${fields.name.toLowerCase()}.com`], ...fields });
 
 const active = [
-  sub({ name: "Canva", plan: "Pro", status: "trial", price: 14.99, nextRenewal: "2026-10-24", category: "Work tools", lastUsed: at("2026-10-21") }),
-  sub({ name: "ChatGPT Plus", price: 20, nextRenewal: "2026-11-02", category: "Work tools", lastUsed: at("2026-10-21") }),
-  sub({ name: "Netflix", price: 17.99, nextRenewal: "2026-11-10", category: "Entertainment", lastUsed: at("2026-10-20") }),
-  sub({ name: "Linear", price: 8, nextRenewal: "2026-11-14", category: "Work tools", lastUsed: at("2026-10-22") }),
-  sub({ name: "Dropbox", price: 119.88, cycle: "yearly", nextRenewal: "2026-11-16", category: "Work tools", lastUsed: null }),
-  sub({ name: "Spotify", price: 11.99, nextRenewal: "2026-11-19", category: "Entertainment", lastUsed: at("2026-10-22") }),
+  sub({ name: "Canva", plan: "Pro", status: "trial", price: 14.99, nextRenewal: "2026-10-24", category: "Work tools", }),
+  sub({ name: "ChatGPT Plus", price: 20, nextRenewal: "2026-11-02", category: "Work tools", keptAt: "2026-10-03" }),
+  sub({ name: "Netflix", price: 17.99, nextRenewal: "2026-11-10", category: "Entertainment", keptAt: "2026-09-10" }),
+  sub({ name: "Linear", price: 8, nextRenewal: "2026-11-14", category: "Work tools", keptAt: "2026-10-22" }),
+  sub({ name: "Dropbox", price: 119.88, cycle: "yearly", nextRenewal: "2026-11-16", category: "Work tools" }),
+  sub({ name: "Spotify", price: 11.99, nextRenewal: "2026-11-19", category: "Entertainment", keptAt: "2026-07-25" }),
   sub({
     name: "Paramount+",
     price: 7.99,
     nextRenewal: "2026-11-21",
     category: "Entertainment",
-    lastUsed: at("2026-08-19"),
+    keptAt: "2026-07-01", // over 90 days ago: ask again
     charges: [
       { date: "2026-06-21", amount: 5.99 },
       { date: "2026-07-21", amount: 7.99 },
@@ -45,7 +41,7 @@ const active = [
       { date: "2026-10-21", amount: 7.99 },
     ],
   }),
-  sub({ name: "Adobe", price: 119.88, cycle: "yearly", nextRenewal: "2026-12-26", category: "Work tools", lastUsed: at("2026-09-07") }),
+  sub({ name: "Adobe", price: 119.88, cycle: "yearly", nextRenewal: "2026-12-26", category: "Work tools" }),
 ];
 
 const cancelled = [
@@ -70,18 +66,22 @@ test("budget meter", () => {
   assert.equal(budgetStatus(101.95, 100).over, true);
 });
 
-test("worth reviewing: 30+ days or no visits, biggest first, trials excluded", () => {
+test("still using these: never kept or kept 90+ days ago, biggest first, trials excluded", () => {
   const w = worthReviewing(all, TODAY);
   assert.deepEqual(w.items.map((s) => s.name), ["Adobe", "Dropbox", "Paramount+"]);
   assert.equal(w.monthly, 27.97);
   assert.equal(w.yearly, 335.64);
 });
 
-test("isStale respects 'I still use it on another device' and missing domains", () => {
+test("needsCheck: asks until kept, then again after 90 days", () => {
   const dropbox = active.find((s) => s.name === "Dropbox");
-  assert.equal(isStale(dropbox, TODAY), true);
-  assert.equal(isStale({ ...dropbox, usedElsewhere: true }, TODAY), false);
-  assert.equal(isStale({ ...dropbox, domains: [] }, TODAY), false);
+  assert.equal(needsCheck(dropbox, TODAY), true);
+  assert.equal(needsCheck({ ...dropbox, keptAt: "2026-07-25" }, TODAY), false); // 89 days
+  assert.equal(needsCheck({ ...dropbox, keptAt: "2026-07-24" }, TODAY), true); // 90 days
+  // No website is fine: we no longer need one to ask.
+  assert.equal(needsCheck({ ...dropbox, domains: [] }, TODAY), true);
+  assert.equal(needsCheck({ ...dropbox, status: "trial" }, TODAY), false);
+  assert.equal(needsCheck({ ...dropbox, status: "cancelled" }, TODAY), false);
 });
 
 test("upcoming is soonest first and flags trials", () => {
@@ -155,32 +155,4 @@ test("price history finds the rise", () => {
     { date: p.latestRise.date, from: p.latestRise.from, to: p.latestRise.to, pct: Math.round(p.latestRise.change * 100) },
     { date: "2026-07-21", from: 5.99, to: 7.99, pct: 33 },
   );
-});
-
-test("cost per visit over the last 3 months", () => {
-  const paramount = active.find((x) => x.name === "Paramount+");
-  const weekly = { "2026-08-17": 2, "2026-05-04": 9 };
-  assert.deepEqual(costPerVisit(paramount, weekly, TODAY), { months: 3, paid: 23.97, visits: 2, perVisit: 11.99, estimated: false });
-  // No charges on record: estimate from the price, only for older subscriptions.
-  const manual = { ...paramount, charges: [], startedAt: "2026-01-01" };
-  assert.equal(costPerVisit(manual, {}, TODAY).estimated, true);
-  assert.equal(costPerVisit(manual, {}, TODAY).perVisit, null);
-  assert.equal(costPerVisit({ ...manual, startedAt: "2026-10-01" }, {}, TODAY), null);
-});
-
-test("weekly visits: 12 weeks, oldest first, zeros filled", () => {
-  const w = weeklyVisits({ "2026-10-19": 3, "2026-08-03": 1 }, TODAY);
-  assert.equal(w.length, 12);
-  assert.equal(w.at(-1).week, "2026-10-19");
-  assert.equal(w.at(-1).count, 3);
-  assert.equal(w[0].week, "2026-08-03");
-  assert.equal(w[0].count, 1);
-});
-
-test("budget impact of a new signup", () => {
-  const impact = budgetImpact(all, 16, 100, TODAY);
-  assert.deepEqual({ ...impact, cover: impact.cover.name }, { before: 85.95, after: 101.95, over: 1.95, budget: 100, cover: "Paramount+" });
-  assert.equal(budgetImpact(all, 5, 100, TODAY), null);
-  assert.equal(budgetImpact(all, 16, null, TODAY), null);
-  assert.equal(budgetImpact(all, 60, 100, TODAY).cover, null);
 });

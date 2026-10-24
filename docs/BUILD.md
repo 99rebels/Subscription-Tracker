@@ -4,14 +4,16 @@ The working plan for building the designs. Any instance picking this up: read [H
 
 Decisions behind this plan are in [product-plan.md](product-plan.md) (decisions table): build order, no framework, `activeTab`-only price reading, currency conversion, and what's parked.
 
-## Where things stand (2026-10-23)
+## Where things stand (2026-10-24)
 
-**The build is complete.** Every screen in `docs/designs/` is built (steps 1–5 below), totals convert between currencies, and cancel links have had an automated check. 62 unit tests pass (`npm test`).
+**The build is complete.** Every screen in `docs/designs/` is built (steps 1–5 below), totals convert between currencies, and cancel links have had an automated check. The receipt parser rebuild (step 6) is finished (founder, 2026-10-24). 95 unit tests pass (`npm test`).
+
+**2026-10-24: browsing history and checkout detection removed** (step 7). Subscriptions come only from Gmail or manual add; "last used" is replaced by asking "Still using it?". Where the designs show visits, cost per visit, the "Detected signup" popup or "Spotted while browsing", the build no longer follows them.
 
 **Founder testing in real Chrome** ([TESTING.md](TESTING.md)): the founder reports everything works **except one thing:**
 
 - **Renewal reminder didn't arrive.** The founder set a subscription's next charge to tomorrow (Detail › Edit) and got no notification. They're keeping an eye on it. This is the first thing to look at. Leads, most likely first:
-  1. **Timing.** `checkRenewals()` in `src/background.js` runs on startup and then hourly (`renewal-check` alarm); editing a subscription doesn't trigger it. So a reminder can take up to an hour. Reloading the extension runs it at once. Likely fix: also run `checkRenewals()` when `subscriptions` change (the `storage.onChanged` listener already exists), so a reminder fires straight after an edit.
+  1. **Timing. Fixed 2026-10-24:** `checkRenewals()` ran only on startup and hourly, so a reminder could take up to an hour after an edit. It now also runs whenever `subscriptions` or `settings` change (`storage.onChanged`), one check at a time. **Founder to re-test** (TESTING.md §4); if it still doesn't arrive, it's one of the leads below.
   2. **macOS / Chrome notification settings.** System Settings › Notifications › Google Chrome (allowed? Focus mode?), and `chrome://settings/content/notifications`. Chrome on macOS shows extension notifications as native ones.
   3. **State.** In the service worker console (`chrome://extensions` › service worker): `chrome.storage.local.get("subscriptions")` and check that sub's `nextRenewal`, `reminderDays`, `notifiedFor` (must not already equal `nextRenewal`), and `status` (trials use `trialReminderDays`, default 3). `chrome.alarms.getAll()` should list `renewal-check` and `gmail-sync`.
   4. **Notification options.** `notifyRenewal()` uses `requireInteraction: true` plus buttons; if nothing shows at all, try a bare notification from the console to rule out the options.
@@ -117,7 +119,7 @@ Notes for later steps:
 - [x] Monthly check-in notification on the first check of each month (background `checkRenewals`)
 - [x] `h()` now flattens nested child arrays (two screens printed "[object …]" before)
 
-## Step 6: Receipt parser rebuild (in progress)
+## Step 6: Receipt parser rebuild (done; open items below are later work)
 
 Why and the design: product-plan feature 10. Work in this order so every change is measured.
 
@@ -145,6 +147,19 @@ Why and the design: product-plan feature 10. Work in this order so every change 
 - [ ] Grouping: `merchantOf()` matches services.json subdomains both ways, so every google.com sender (Workspace, Store, Play) becomes "Google Play subscriptions"; services.json only knows amazon.com (Prime here is amazon.de); one merchant across senders (Render: render.com then Stripe)
 - [ ] **Overfitting check:** run the scorecard on testers' inboxes the rules weren't tuned on (same export page + their own answer sheet)
 - [ ] Later: tester export flow (same page, for Testing-mode users), split one sender into products
+
+## Step 7: Gmail only, "Still using it?" instead of visits (done, 2026-10-24)
+
+Founder decision (product-plan decisions table): visits on one computer give wrong signals (Netflix on the TV, insurance you'd never visit) and reading history puts people off; checkout detection only read prices if the user clicked the icon, and the receipt email arrives anyway.
+
+- [x] Removed: `src/lib/usage.js`, `detection.js`, `checkout-price.js` (+ test); `webNavigation` listeners, history backfill, detection notifications, `chrome.action.openPopup` fallback; popup "Detected signup"; Review "Spotted while browsing"; Detail usage chart + cost per visit + "I still use it on another device"; scan "things you don't open" note and history step; Settings switches for checkout detection and visit tracking; `budgetImpact()` (only the detected-signup screen used it); "Price pending" tag
+- [x] `manifest.json`: dropped `history`, `webNavigation`, `activeTab`, `scripting`. Left: storage, alarms, notifications, identity, sidePanel, favicon
+- [x] Model (`SCHEMA_VERSION` 3): `keptAt` ("YYYY-MM-DD" the user last said they still use it) replaces `lastUsed` / `usedElsewhere` / `usageBackfilled`; `keepSubscription()`. Migration: `usedElsewhere` → kept today; `pending` cleared; `priceSource: "checkout"` normalises to manual. Old `visits` data and `lastUsed` fields are left in storage (founder: fine for now), just unused
+- [x] `summary.js`: `needsCheck()` (current, not a trial, never kept or kept 90+ days ago: `ASK_AGAIN_AFTER_DAYS`) replaces `isStale()`; `worthReviewing()` and `cutPlan()` use it. Cut plan: the cheapest single one that covers the gap, else biggest first
+- [x] Wording (`text.js` `keepStatus()`): "still using it?" in amber on rows; "You said yes, Oct 13" on Detail
+- [x] Screens: Overview **Still using these?** with a **Keep** button per row (`.row-link` rows); Detail **Still using it?** card (Yes, keep it / No, show me how to cancel); Subscriptions **Still using?** filter (`?filter=check`); calendar day card's **Keep it** now records the answer; popup nudge with **Keep** / **Review**; renewal notification's **Keep it** records it too
+- [x] Background: Gmail re-sync every hour and a minute after startup (was 6 hours); a notification for each new subscription found in email ("Track Canva?", opens Review); badge follows Review on every change (it didn't update after answering a question in the panel before); reminders run on edit (step 7 also fixed bug lead 1 above)
+- [ ] Not caught any more: signups that send no email at the start (e.g. the Canva trial in product-plan feature 10) show up only from their first receipt or reminder email
 
 ## Also to do during the build
 

@@ -1,5 +1,5 @@
 // Side panel · Add / edit a subscription. Manual entry is the fallback (most come
-// from Gmail or checkout detection), so this is a plain form built from the
+// from the Gmail scan), so this is a plain form built from the
 // shared components; there's no board for it yet.
 import { h } from "../ui/dom.js";
 import { icon } from "../ui/components.js";
@@ -46,7 +46,7 @@ export function renderEdit(state, actions, id) {
     { class: "form", novalidate: "" },
     field("Name", input("name", { value: sub.name, required: "", placeholder: "Netflix", autocomplete: "off" })),
     field("Plan", input("plan", { value: sub.plan ?? "", placeholder: "Optional, e.g. Premium" })),
-    field("Website", input("website", { value: sub.domains?.[0] ?? "", placeholder: "netflix.com" }), "Used to see when you last visited"),
+    field("Website", input("website", { value: sub.domains?.[0] ?? "", placeholder: "netflix.com" }), "Used for its logo and cancel link"),
     h(
       "div",
       { class: "pair" },
@@ -84,7 +84,7 @@ export function renderEdit(state, actions, id) {
     const priceChanged = !existing || Number(existing.price) !== Number(price);
 
     const updated = {
-      ...(existing ?? { id: newId(), createdAt: Date.now(), source: "manual", startedAt: state.today, lastUsed: null }),
+      ...(existing ?? { id: newId(), createdAt: Date.now(), source: "manual", startedAt: state.today }),
       name,
       plan: f.plan.value.trim(),
       domains,
@@ -99,7 +99,6 @@ export function renderEdit(state, actions, id) {
     };
     if (dateChanged) updated.notifiedFor = null;
     if (priceChanged) Object.assign(updated, { priceSource: "manual", confirmedByReceipt: false });
-    if (!existing || existing.domains?.join() !== domains.join()) updated.usageBackfilled = false;
 
     await actions.save(updated);
     location.replace(`#sub/${updated.id}`);

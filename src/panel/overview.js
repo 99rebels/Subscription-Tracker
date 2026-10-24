@@ -16,6 +16,7 @@ import {
 } from "../lib/summary.js";
 import { addDays, daysBetween, weekStart, today as todayLocal } from "../lib/dates.js";
 import { answerReview } from "../lib/review.js";
+import { keepSubscription } from "../lib/model.js";
 import { monthlyCost } from "../lib/money.js";
 import { otherCurrencies } from "../lib/fx.js";
 
@@ -35,27 +36,27 @@ export function renderOverview(state, actions) {
     totalSection(state),
     savingsCard(state),
     needsAttention(state, actions),
-    worthReviewingSection(subs, today, currency, state.conv),
+    stillUsingSection(state, actions),
     comingUp(subs, today),
     forecastSection(subs, today, currency, state.conv),
     whereItGoes(subs, currency, state.conv),
   );
 }
 
-// First run (as in PopupEmpty.dc.html): scan Gmail, or wait for checkout detection.
+// First run (as in PopupEmpty.dc.html): scan Gmail, or add one by hand.
 function emptyState() {
   return h(
     "div",
     { style: "display: flex; flex-direction: column; gap: 14px; padding-top: 8px" },
     h("h1", { style: "font: var(--text-heading); letter-spacing: -0.02em; line-height: 1.2" }, "Find everything you're paying for"),
-    h("p", { class: "muted", style: "font-size: 13px; line-height: 1.5" }, "We'll read your receipts and show what you pay, when you're charged next, and what you've stopped using."),
+    h("p", { class: "muted", style: "font-size: 13px; line-height: 1.5" }, "We'll read your receipts, show what you pay, and remind you before each charge."),
     h("a", { class: "btn primary lg block", href: "#scan?start=1" }, icon("mail"), "Scan my Gmail receipts"),
     h("div", { class: "caption", style: "display: flex; align-items: center; justify-content: center; gap: 6px" }, icon("lock", { size: 13 }), "Read in your browser. Nothing leaves your computer."),
     h(
       "div",
       { style: "margin-top: 8px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 12px" },
       h("div", { class: "icon-tile", style: "width: 28px; height: 28px; border-radius: 7px; background: var(--raised); color: var(--accent)" }, icon("target", { size: 15 })),
-      h("div", { class: "caption", style: "flex-grow: 1; line-height: 1.45" }, "Or just keep browsing. We'll spot new subscriptions at checkout."),
+      h("div", { class: "caption", style: "flex-grow: 1; line-height: 1.45" }, "Not on Gmail? You can add subscriptions yourself."),
       h("a", { href: "#edit/new", style: "font-size: 12px; font-weight: 500; white-space: nowrap" }, "Add one"),
     ),
   );
@@ -86,21 +87,21 @@ function conversion(subs, settings, conv) {
   return note ? h("div", { class: "caption faint", style: "margin-top: 6px" }, note) : null;
 }
 
-// Over budget: "You're $1.95 over. Cancelling Dropbox (no visits on this
-// computer) brings you $8.04 under." (product-plan §4)
+// Over budget: "You're $1.95 over. Cancelling Dropbox brings you $8.04 under."
+// Only suggests things the user hasn't said they still use (product-plan §4).
 function cutPlanNote(subs, settings, conv) {
   const plan = cutPlan(subs, settings.budget, todayLocal(), conv);
   if (!plan) return null;
   const currency = settings.currency;
   let text;
-  if (!plan.picks.length) text = `You're ${t.money(plan.over, currency)} over, and everything has been used lately.`;
+  if (!plan.picks.length) text = `You're ${t.money(plan.over, currency)} over, and you've said you still use everything.`;
   else {
-    const names = plan.picks.length === 1 ? `${plan.picks[0].name} (${t.usage(plan.picks[0], todayLocal()).text})` : t.joinAnd(plan.picks.map((s) => s.name));
+    const names = t.joinAnd(plan.picks.map((s) => s.name));
     text = plan.enough
       ? `You're ${t.money(plan.over, currency)} over. Cancelling ${names} brings you ${t.money(plan.under, currency)} under.`
       : `You're ${t.money(plan.over, currency)} over. Cancelling ${names} saves ${t.money(plan.saved, currency)}/mo.`;
   }
-  return h("div", { class: "caption", style: "margin-top: 8px; line-height: 1.45" }, text, plan.picks.length ? [" ", h("a", { href: "#subscriptions?filter=stale", style: "color: var(--accent)" }, "Review")] : null);
+  return h("div", { class: "caption", style: "margin-top: 8px; line-height: 1.45" }, text, plan.picks.length ? [" ", h("a", { href: "#subscriptions?filter=check", style: "color: var(--accent)" }, "Review")] : null);
 }
 
 function savingsCard(state) {
@@ -127,7 +128,7 @@ function savingsCard(state) {
   if (!w.items.length) return null;
   return h(
     "a",
-    { class: "savings-card zero", href: "#subscriptions?filter=stale" },
+    { class: "savings-card zero", href: "#subscriptions?filter=check" },
     h(
       "div",
       {},
@@ -136,10 +137,10 @@ function savingsCard(state) {
       h(
         "div",
         { class: "caption", style: "line-height: 1.45" },
-        `Going to ${t.plural(w.items.length, "subscription")} you haven't opened in 30+ days. That's ${t.money(w.yearly, currency)} a year.`,
+        `Going to ${t.plural(w.items.length, "subscription")} you haven't said you still use. That's ${t.money(w.yearly, currency)} a year.`,
       ),
     ),
-    h("div", { class: "cta" }, h("span", {}, "Review them"), icon("chevronRight", { size: 14 })),
+    h("div", { class: "cta" }, h("span", {}, "Check them"), icon("chevronRight", { size: 14 })),
   );
 }
 
@@ -173,10 +174,10 @@ function sparkline(series) {
 }
 
 // ---------------------------------------------------------------------------
-// Needs attention: trials ending soon, signups spotted at checkout, recent price rises.
+// Needs attention: trials ending soon, questions from Gmail, recent price rises.
 
 function needsAttention(state, actions) {
-  const { subscriptions: subs, today, pending } = state;
+  const { subscriptions: subs, today } = state;
   const items = [];
 
   for (const u of trialsEndingSoon(subs, today)) {
@@ -204,22 +205,6 @@ function needsAttention(state, actions) {
         { class: "attention-item" },
         h("div", { class: "line" }, logoTile(r.item), h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, r.title)), h("div", { class: "row-sub" }, r.reason))),
         h("div", { class: "actions" }, h("button", { class: "btn sm", onclick: () => answerReview(r.id, "yes") }, r.yes), h("button", { class: "btn sm", onclick: () => answerReview(r.id, "no") }, r.no)),
-      ),
-    );
-  }
-
-  for (const p of pending) {
-    items.push(
-      h(
-        "div",
-        { class: "attention-item" },
-        h(
-          "div",
-          { class: "line" },
-          logoTile({ name: p.name, domains: [p.domain] }),
-          h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, `Did you subscribe to ${p.name}?`)), h("div", { class: "row-sub" }, "Spotted at checkout")),
-          h("a", { class: "btn sm", href: "#review" }, "Review"),
-        ),
       ),
     );
   }
@@ -254,30 +239,41 @@ function needsAttention(state, actions) {
 
 // ---------------------------------------------------------------------------
 
-function worthReviewingSection(subs, today, currency, conv) {
+// "Still using these?": everything the user hasn't said they still use (never,
+// or not in a few months), biggest first. Keep clears it; the row opens Detail,
+// which has the cancel help.
+function stillUsingSection(state, actions) {
+  const { subscriptions: subs, today, conv } = state;
+  const currency = state.settings.currency;
   const w = worthReviewing(subs, today, conv);
   if (!w.items.length) return null;
   const rows = w.items.map((sub) => {
-    const u = t.usage(sub, today);
+    const k = t.keepStatus(sub, today);
+    const line = k.detail ? `Last said yes ${t.shortDate(sub.keptAt)}` : t.renewalText(sub);
     return h(
-      "a",
-      { class: "row compact", href: `#sub/${sub.id}` },
-      logoTile(sub, { size: 28 }),
-      h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, t.displayName(sub))), h("div", { class: "row-sub attention" }, t.capitalize(u.text))),
-      h("span", { class: "num strong", style: "font-size: 13px" }, t.money(monthlyCost(sub), sub.currency), h("span", { class: "muted", style: "font-weight: 400" }, "/mo")),
+      "div",
+      { class: "row compact" },
+      h(
+        "a",
+        { class: "row-link", href: `#sub/${sub.id}` },
+        logoTile(sub, { size: 28 }),
+        h("div", { class: "row-main" }, h("div", { class: "row-title" }, h("span", { class: "name" }, t.displayName(sub))), h("div", { class: "row-sub" }, line)),
+        h("span", { class: "num strong", style: "font-size: 13px" }, t.money(monthlyCost(sub), sub.currency), h("span", { class: "muted", style: "font-weight: 400" }, "/mo")),
+      ),
+      h("button", { class: "btn sm", "aria-label": `Keep ${sub.name}: I still use it`, onclick: () => actions.save(keepSubscription(sub, today)) }, "Keep"),
     );
   });
   return h(
     "section",
     { class: "section" },
-    sectionHead("Worth reviewing", "Not visited in 30+ days"),
+    sectionHead("Still using these?", "Keep what you use"),
     h(
       "div",
       { class: "card" },
       h(
         "div",
         { class: "review-head" },
-        h("div", { class: "caption" }, t.cancelAllLabel(w.items.length)),
+        h("div", { class: "caption" }, t.plural(w.items.length, "subscription") + " to check"),
         h("div", { style: "display: flex; align-items: baseline; gap: 6px; margin-top: 2px" }, h("span", { class: "big" }, t.money(w.yearly, currency)), h("span", { class: "caption" }, `a year · ${t.money(w.monthly, currency)}/mo`)),
       ),
       ...rows,

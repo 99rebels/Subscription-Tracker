@@ -1,9 +1,10 @@
 // Side panel · Subscriptions, with a List / Calendar toggle
 // (docs/designs/PanelList.dc.html, PanelCalendar.dc.html)
 import { h } from "../ui/dom.js";
-import { icon, logoTile, subscriptionRow, usageSpan } from "../ui/components.js";
+import { icon, logoTile, subscriptionRow, askSpan } from "../ui/components.js";
 import * as t from "../ui/text.js";
-import { isCurrent, isStale, totals, month as monthOf, savings } from "../lib/summary.js";
+import { keepSubscription } from "../lib/model.js";
+import { isCurrent, needsCheck, totals, month as monthOf, savings } from "../lib/summary.js";
 import { addMonthsToKey, parseISODate, addDays } from "../lib/dates.js";
 
 // View state that survives re-renders (search text, sort, calendar month).
@@ -16,7 +17,7 @@ const FILTERS = [
   ["yearly", "Yearly", (s) => s.status !== "trial" && s.cycle === "yearly"],
   ["weekly", "Weekly", (s) => s.status !== "trial" && s.cycle === "weekly"],
   ["trials", "Trials", (s) => s.status === "trial"],
-  ["stale", "Not visited", (s, today) => isStale(s, today)],
+  ["check", "Still using?", (s, today) => needsCheck(s, today)],
 ];
 
 // Each sort takes the currency converter so "Price" compares like with like.
@@ -24,7 +25,6 @@ const SORTS = {
   renewal: ["Next renewal", () => (a, b) => (a.nextRenewal ?? "9999").localeCompare(b.nextRenewal ?? "9999")],
   price: ["Price", (conv) => (a, b) => conv.monthly(b) - conv.monthly(a) || Number(b.price) - Number(a.price)],
   name: ["Name", () => (a, b) => a.name.localeCompare(b.name)],
-  visit: ["Last visit", () => (a, b) => (a.lastUsed ?? 0) - (b.lastUsed ?? 0)],
 };
 
 export function renderSubscriptions(state, actions, { calendar = false, filter = null }) {
@@ -224,7 +224,8 @@ function dayCard(date, charges, today, actions) {
     ...charges.map((c) => {
       const s = c.sub;
       const kind = c.trial ? "Trial ends" : t.cycleName(s.cycle);
-      const sub = s.domains?.length && !c.trial ? [kind, " · ", usageSpan(s, today)] : [kind];
+      const ask = c.trial ? null : askSpan(s, today);
+      const sub = ask ? [kind, " · ", ask] : [kind];
       return h(
         "div",
         { style: "display: flex; flex-direction: column; gap: 10px" },
@@ -245,7 +246,8 @@ function dayCard(date, charges, today, actions) {
               class: "btn md",
               onclick: () => {
                 ui.selected = "none";
-                actions.rerender();
+                if (c.trial) actions.rerender();
+                else actions.save(keepSubscription(s, today));
               },
             },
             "Keep it",

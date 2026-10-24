@@ -42,7 +42,7 @@ export function addDays(dateStr, days) {
   return toISODate(date);
 }
 
-// Monday of the week containing dateStr. Weekly visit counts are keyed by this.
+// Monday of the week containing dateStr ("This week" on the Overview).
 export function weekStart(dateStr) {
   const date = parseISODate(dateStr);
   const sinceMonday = (date.getDay() + 6) % 7;
